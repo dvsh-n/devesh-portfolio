@@ -9,6 +9,7 @@ export interface Publication {
   topics: string[];
   paperUrl: string;
   videoUrl: string;
+  websiteUrl?: string;
   media: { src: string; type: 'image' | 'video' } | null;
 }
 
@@ -16,8 +17,9 @@ export const publications: Publication[] = [
   {
     slug: 'pixels-to-proofs',
     year: 2026,
-    paperUrl: '#', // Replace with the arXiv URL.
-    videoUrl: '#', // Replace with the YouTube URL.
+    paperUrl: 'https://trustworthyrobotics.github.io/SLS-squared/assets/paper/SLS2_paper.pdf',
+    videoUrl: 'https://www.youtube.com/watch?v=3sYYNSQqwSQ',
+    websiteUrl: 'https://trustworthyrobotics.github.io/SLS-squared/',
     media: null, // Set to { src: '/media/example.mp4', type: 'video' } or type: 'image'.
     title: 'Pixels to Proofs: Probabilistically Safe Latent World Model Control via Parallel Conformal Robust MPC',
     venue: 'RSS 2026 · Robot World Model Workshop',

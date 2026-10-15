@@ -89,7 +89,7 @@ import AsciiBackground from '../components/AsciiBackground.astro';
                   <p class="venue">{paper.venue}{paper.distinction && <> · <span class="distinction">{paper.distinction}</span></>}</p>
                   <div class="paper-buttons">
                     <a class="button" href={paper.paperUrl} data-placeholder={paper.paperUrl === '#' ? '' : undefined} title={paper.paperUrl === '#' ? 'Paper link coming soon' : 'Read the paper'} aria-label={`Paper: ${paper.title}${paper.paperUrl === '#' ? ' (link coming soon)' : ''}`}>Paper</a>
-                    <a class="button" href={`/projects/${paper.slug}/`} aria-label={`Project website: ${paper.title}`}>Website</a>
+                    <a class="button" href={paper.websiteUrl ?? `/projects/${paper.slug}/`} aria-label={`Project website: ${paper.title}`}>Website</a>
                     <a class="button" href={paper.videoUrl} data-placeholder={paper.videoUrl === '#' ? '' : undefined} title={paper.videoUrl === '#' ? 'Video link coming soon' : 'Watch the video'} aria-label={`Video: ${paper.title}${paper.videoUrl === '#' ? ' (link coming soon)' : ''}`}>Video</a>
                   </div>
                 </div>
@@ -141,8 +141,11 @@ import AsciiBackground from '../components/AsciiBackground.astro';
   .social-links svg { width: 22px; height: 22px; }
   .section-nav { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 35px; min-height: 65px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: #151515; margin-bottom: 0; }
   .section-nav a { display: flex; align-items: center; min-height: 64px; position: relative; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--ink); }
-  .section-nav a::after { content: ''; position: absolute; height: 2px; bottom: 17px; left: 0; width: 100%; background: var(--orange); transform: scaleX(0); transition: transform .15s ease; }
-  .section-nav a:hover { color: var(--orange); }
+  .section-nav a::after { content: ''; position: absolute; height: 2px; bottom: 17px; left: 0; width: 100%; background: var(--nav-accent); transform: scaleX(0); transition: transform .15s ease; }
+  .section-nav a[href="#about"] { --nav-accent: var(--orange); }
+  .section-nav a[href="#education"] { --nav-accent: var(--green); }
+  .section-nav a[href="#publications"] { --nav-accent: var(--teal); }
+  .section-nav a:hover, .section-nav a:focus-visible { color: var(--nav-accent); outline-color: var(--nav-accent); }
   .section-nav a:hover::after, .section-nav a:focus-visible::after { transform: scaleX(1); }
   .panel { background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 6px; padding: 30px 40px 26px; margin-bottom: 24px; }
   .accent-orange { --accent: var(--orange); }
@@ -167,7 +170,7 @@ import AsciiBackground from '../components/AsciiBackground.astro';
   .distinction { color: #ef8585; }
   .paper-buttons { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
   .button { display: inline-flex; align-items: center; justify-content: center; min-height: 26px; padding: 2px 12px; border: 1px solid #a6a5a2; border-radius: 3px; color: var(--ink); font-size: 11px; font-weight: 500; line-height: 20px; text-transform: uppercase; letter-spacing: 1px; transition: color .15s ease, background .15s ease, border-color .15s ease; }
-  .button:hover { background: #b56443; border-color: #b56443; color: #fff; }
+  .button:hover, .button:focus-visible { background: var(--teal); border-color: var(--teal); color: #151515; outline-color: var(--teal); }
   footer { border-top: 1px solid var(--line); padding: 15px 0 40px; text-align: center; color: var(--muted); font-size: 12px; }
   .skip-link { position: absolute; top: -100px; left: 20px; padding: 8px 14px; background: var(--panel); z-index: 10; }
   .skip-link:focus { top: 10px; }
