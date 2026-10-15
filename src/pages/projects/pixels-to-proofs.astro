@@ -1,0 +1,24 @@
+---
+import { publications } from '../../data/publications';
+const project = publications.find((paper) => paper.slug === 'pixels-to-proofs')!;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#151515" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{project.title} · Devesh Nath</title>
+  </head>
+  <body>
+    <!-- Blank project page, ready for project content. -->
+  </body>
+</html>
+
+<style is:global>
+  html { color-scheme: dark; background: #151515; min-height: 100%; }
+  body { margin: 0; }
+</style>

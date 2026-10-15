@@ -1,19 +1,215 @@
 ---
-
+import { publications } from '../data/publications';
+const years = [...new Set(publications.map((paper) => paper.year))].sort((a, b) => b - a);
 ---
 
+<!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>wuvu daby dirl</h1>
-		<h1>toi no deef</h1>
-		<h1>but beville was given</h1>
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#151515" />
+    <meta name="description" content="Devesh Nath — Robotics PhD student at Georgia Tech, working on safe robot control, learned world models, and statistical safety guarantees." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
+    <title>Devesh Nath</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#about">Skip to content</a>
+    <div class="container">
+      <header class="header">
+        <div class="portrait" role="img" aria-label="Profile photo placeholder"></div>
+        <div class="intro">
+          <h1>Devesh Nath</h1>
+          <p>Third-year PhD Student, Robotics · Georgia Tech</p>
+          <p>Trustworthy Robotics Lab</p>
+          <p><a class="email" href="mailto:dnath7@gatech.edu">dnath7 [AT] gatech.edu</a></p>
+          <nav class="social-links" aria-label="Contact and profiles">
+            <a href="/Resume.pdf" download aria-label="Download résumé" title="Download résumé">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5" /></svg>
+            </a>
+            <a href="https://www.linkedin.com/in/deveshnath" aria-label="LinkedIn" title="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5.2 3a2.2 2.2 0 1 0 0 4.4 2.2 2.2 0 0 0 0-4.4ZM3.4 9h3.6v12H3.4V9Zm6 0h3.4v1.6h.1c.5-1 1.7-1.9 3.5-1.9 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-6c0-1.4 0-3.2-2-3.2s-2.3 1.5-2.3 3.1V21H9.4V9Z" /></svg>
+            </a>
+            <a href="https://github.com/dvsh-n" aria-label="GitHub" title="GitHub">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.86c-2.78.6-3.37-1.18-3.37-1.18-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.64-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03A9.6 9.6 0 0 1 12 6.82c.85 0 1.71.12 2.51.34 1.91-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.6 1.03 2.69 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.76c0 .27.18.58.69.48A10 10 0 0 0 12 2Z" /></svg>
+            </a>
+          </nav>
+        </div>
+      </header>
+
+      <nav class="section-nav" aria-label="Page sections">
+        <a href="#about">About</a>
+        <a href="#education">Education</a>
+        <a href="#publications">Publications</a>
+      </nav>
+
+      <main>
+        <section class="panel accent-orange" id="about" aria-labelledby="about-title">
+          <h2 id="about-title">01 / About</h2>
+          <p>Hi, I’m Devesh! I’m a third-year PhD student in Robotics at <a href="https://www.gatech.edu/">Georgia Tech</a> and a graduate researcher in the Trustworthy Robotics Lab.</p>
+          <p>I’m interested in building robots that are both capable and provably safe. I believe performant and safe robotics starts with principles from control theory and statistics. Scaling data, compute, and tuning helps, but mostly pushes us toward a local optimum. The real leap is using ML to discover representations that principled methods can exploit.</p>
+          <p>My current work brings together learned world models, Koopman operators, conformal prediction, and robust control. My goal is to make reliable, real-time planning and control scale to complex robotic systems, while retaining meaningful safety guarantees.</p>
+        </section>
+
+        <section class="panel accent-green" id="education" aria-labelledby="education-title">
+          <h2 id="education-title">02 / Education</h2>
+          <article class="education-entry">
+            <h3>Georgia Institute of Technology</h3>
+            <div class="degree"><span>PhD in Robotics</span><span class="date">Aug 2024 – May 2029 (Expected)</span></div>
+            <p class="education-detail">Third Year · Trustworthy Robotics Lab</p>
+          </article>
+          <article class="education-entry">
+            <h3>Arizona State University</h3>
+            <div class="degree"><span>BSE in Electrical Engineering</span><span class="date">Aug 2020 – May 2024</span></div>
+            <p class="education-detail">GPA: 4.00 / 4.00</p>
+          </article>
+        </section>
+
+        <section class="panel accent-teal" id="publications" aria-labelledby="publications-title">
+          <h2 id="publications-title">03 / Publications</h2>
+          <p class="contribution-note">( * indicates equal contribution )</p>
+          {years.map((year) => (
+            <div class="publication-year">
+              <h3 class="year">{year}</h3>
+              <div class="papers">
+                {publications.filter((paper) => paper.year === year).map((paper) => (
+                  <article class="paper" id={paper.slug} aria-labelledby={`${paper.slug}-title`}>
+                    <div class="figure">
+                      {paper.media ? (
+                        paper.media.type === 'video' ? (
+                          <video src={paper.media.src} autoplay loop muted playsinline controls preload="metadata" aria-label={`Research video for ${paper.title}`} />
+                        ) : (
+                          <img src={paper.media.src} alt={`Research overview for ${paper.title}`} loading="lazy" />
+                        )
+                      ) : (
+                        <div class="media-placeholder" role="img" aria-label={`Image or video placeholder for ${paper.title}`}></div>
+                      )}
+                    </div>
+                    <div class="paper-content">
+                      <h4 id={`${paper.slug}-title`}>{paper.title}</h4>
+                      <p class="authors">{paper.authors.split('Devesh Nath').map((part, index) => <>{index > 0 && <strong>Devesh Nath</strong>}{part}</>)}</p>
+                      <p class="venue">{paper.venue}{paper.distinction && <> · <span class="distinction">{paper.distinction}</span></>}</p>
+                      <div class="paper-buttons">
+                        <a class="button" href={paper.paperUrl} data-placeholder={paper.paperUrl === '#' ? '' : undefined} title={paper.paperUrl === '#' ? 'Paper link coming soon' : 'Read the paper'} aria-label={`Paper: ${paper.title}${paper.paperUrl === '#' ? ' (link coming soon)' : ''}`}>Paper</a>
+                        <a class="button" href={`/projects/${paper.slug}/`} aria-label={`Project website: ${paper.title}`}>Website</a>
+                        <a class="button" href={paper.videoUrl} data-placeholder={paper.videoUrl === '#' ? '' : undefined} title={paper.videoUrl === '#' ? 'Video link coming soon' : 'Watch the video'} aria-label={`Video: ${paper.title}${paper.videoUrl === '#' ? ' (link coming soon)' : ''}`}>Video</a>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          ))}
+        </section>
+      </main>
+      <footer>Devesh Nath</footer>
+    </div>
+    <script>
+      // Placeholder links remain on the current publication until real URLs are added.
+      document.querySelectorAll<HTMLAnchorElement>('a[data-placeholder]').forEach((link) => {
+        link.addEventListener('click', (event) => event.preventDefault());
+      });
+    </script>
+  </body>
 </html>
+
+<style>
+  :global(*) { box-sizing: border-box; }
+  :global(html) {
+    color-scheme: dark;
+    background: #151515;
+    --panel: #1c1c1d;
+    --ink: #dededc;
+    --muted: #a4a3a2;
+    --line: #353432;
+    --orange: #d88864;
+    --teal: #8bafbc;
+    --green: #a5c393;
+    scroll-padding-top: 88px;
+  }
+  :global(body) { margin: 0; font-family: 'Roboto Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 15px; line-height: 1.75; color: var(--ink); -webkit-font-smoothing: antialiased; }
+  :global(::selection) { background: #a95431; color: #fff; }
+  :global(a) { color: var(--orange); font-weight: 700; text-decoration: none; }
+  :global(a:hover) { color: #f1b89b; }
+  :global(a:focus-visible) { outline: 2px solid var(--orange); outline-offset: 5px; border-radius: 2px; }
+  h1, h2, h3, h4, p { margin: 0; }
+  .container { width: 80%; max-width: 800px; margin: 0 auto; }
+  .header { display: grid; grid-template-columns: 22% 1fr; gap: 4%; align-items: center; margin: 50px 0 60px; }
+  .portrait { width: 100%; aspect-ratio: 1; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; }
+  h1 { margin-bottom: 4px; font-size: 34px; font-weight: 700; letter-spacing: -.8px; line-height: 1.2; }
+  .intro p { font-size: 13px; line-height: 1.75; color: var(--muted); }
+  .email { color: inherit; font-weight: 400; }
+  .social-links { display: flex; gap: 13px; align-items: center; margin-top: 9px; }
+  .social-links a { display: inline-flex; padding: 3px 0; color: var(--ink); }
+  .social-links a:hover { color: var(--orange); }
+  .social-links svg { width: 22px; height: 22px; }
+  .section-nav { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 35px; min-height: 65px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: #151515; margin-bottom: 0; }
+  .section-nav a { display: flex; align-items: center; min-height: 64px; position: relative; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--ink); }
+  .section-nav a::after { content: ''; position: absolute; height: 2px; bottom: 17px; left: 0; width: 100%; background: var(--orange); transform: scaleX(0); transition: transform .15s ease; }
+  .section-nav a:hover { color: var(--orange); }
+  .section-nav a:hover::after, .section-nav a:focus-visible::after { transform: scaleX(1); }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 6px; padding: 30px 40px 26px; margin-bottom: 24px; }
+  .accent-orange { --accent: var(--orange); }
+  .accent-green { --accent: var(--green); }
+  .accent-teal { --accent: var(--teal); }
+  h2 { color: var(--accent); font-size: 16px; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase; line-height: 1.35; margin-bottom: 16px; }
+  #about p + p { margin-top: 16px; }
+  .education-entry h3 { font-size: 15px; line-height: 1.7; font-weight: 700; }
+  .education-entry + .education-entry { margin-top: 22px; padding-top: 22px; border-top: 1px dashed var(--line); }
+  .degree { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 5px 12px; padding: 10px 0 6px; font-size: 13px; }
+  .degree > span:first-child::before { content: ''; display: inline-block; vertical-align: 3px; width: 12px; height: 2px; background: var(--accent); margin-right: 10px; }
+  .date { color: var(--teal); background: #242e32; border-radius: 3px; padding: 0 8px; font-size: 11px; }
+  .education-detail { margin-left: 22px; color: var(--muted); font-size: 12px; }
+  .contribution-note { color: var(--muted); font-size: 12px; font-style: italic; margin-bottom: 20px; }
+  .year { font-size: 14px; font-weight: 700; letter-spacing: 1.5px; border-bottom: 1px solid var(--line); padding-bottom: 9px; margin-bottom: 24px; }
+  .publication-year + .publication-year { margin-top: 30px; }
+  .paper { display: grid; grid-template-columns: 22% minmax(0, 1fr); gap: 4%; margin-bottom: 26px; scroll-margin-top: 20px; }
+  .paper:last-child { margin-bottom: 0; }
+  .figure { padding-top: 3px; }
+  .media-placeholder { aspect-ratio: 4 / 3; width: 100%; background: #222223; border: 1px solid var(--line); border-radius: 4px; }
+  .figure img, .figure video { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 4px; }
+  .paper h4 { font-size: 15px; line-height: 1.7; font-weight: 700; margin-bottom: 2px; overflow-wrap: anywhere; }
+  .authors { font-size: 13px; line-height: 1.7; color: var(--muted); margin-bottom: 2px; }
+  .authors strong { color: var(--ink); font-weight: 700; }
+  .venue { color: var(--teal); font-size: 13px; font-style: italic; line-height: 1.7; }
+  .distinction { color: #ef8585; }
+  .paper-buttons { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
+  .button { display: inline-flex; align-items: center; justify-content: center; min-height: 26px; padding: 2px 12px; border: 1px solid #a6a5a2; border-radius: 3px; color: var(--ink); font-size: 11px; font-weight: 500; line-height: 20px; text-transform: uppercase; letter-spacing: 1px; transition: color .15s ease, background .15s ease, border-color .15s ease; }
+  .button:hover { background: #b56443; border-color: #b56443; color: #fff; }
+  footer { border-top: 1px solid var(--line); padding: 15px 0 40px; text-align: center; color: var(--muted); font-size: 12px; }
+  .skip-link { position: absolute; top: -100px; left: 20px; padding: 8px 14px; background: var(--panel); z-index: 10; }
+  .skip-link:focus { top: 10px; }
+  @media (max-width: 749px) {
+    .section-nav { gap: 25px; }
+    .panel { padding: 26px 28px; }
+    .paper { grid-template-columns: 26% minmax(0, 1fr); }
+    h1 { font-size: 30px; }
+  }
+  @media (max-width: 549px) {
+    .container { width: calc(100% - 36px); }
+    .header { grid-template-columns: 96px minmax(0, 1fr); gap: 20px; margin: 36px 0; align-items: start; }
+    h1 { font-size: 25px; line-height: 1.3; }
+    .intro p { font-size: 11px; overflow-wrap: anywhere; }
+    .portrait { aspect-ratio: 1; }
+    .section-nav { gap: 22px; min-height: 58px; }
+    .section-nav a { min-height: 57px; font-size: 10px; letter-spacing: 1px; }
+    .panel { padding: 24px 20px; }
+    #about { font-size: 13px; }
+    h2 { font-size: 14px; }
+    .paper { grid-template-columns: 1fr; gap: 16px; margin-bottom: 32px; }
+    .figure { width: 100%; }
+    .media-placeholder { aspect-ratio: 16 / 9; }
+    .paper h4 { font-size: 14px; }
+    .authors, .venue { font-size: 12px; }
+    .button { min-height: 36px; }
+    .education-entry h3 { font-size: 14px; }
+    .degree { flex-direction: column; align-items: start; }
+    .date { margin-left: 22px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; }
+  }
+</style>
