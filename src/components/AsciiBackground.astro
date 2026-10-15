@@ -6,37 +6,110 @@
 
   if (canvas && context) {
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const glyphs = ['.', ',', ':', ';', '-', '~', '='];
-    const cellWidth = 12;
-    const cellHeight = 18;
+    const glyphs = '.:;-=+*#%@';
+    const cellWidth = 6;
+    const cellHeight = 8;
+    const fontSize = 7;
+    const frameInterval = 1000 / 15;
+    const hiddenMessage = 'Wuvu Daby Dirl';
     let width = 0;
     let height = 0;
     let frame = 0;
     let lastDraw = 0;
     let elapsed = 0;
 
-    function draw() {
-      if (!canvas || !context) return;
-      context.clearRect(0, 0, width, height);
-      context.font = '11px ui-monospace, Menlo, Consolas, monospace';
-      context.textAlign = 'center';
-      context.textBaseline = 'middle';
+    // Smooth volumetric noise changes locally over time, producing evolving
+    // closed contours instead of directional wave motion.
+    function hash(x: number, y: number, z: number) {
+      let n = Math.imul(x, 374761393) ^ Math.imul(y, 668265263) ^ Math.imul(z, 1274126177);
+      n = Math.imul(n ^ (n >>> 13), 1274126177);
+      return ((n ^ (n >>> 16)) >>> 0) / 4294967295;
+    }
 
-      for (let y = 9; y < height; y += cellHeight) {
-        for (let x = 6; x < width; x += cellWidth) {
-          // Contours of a slowly bending field, with characters concentrated
-          // near its troughs. Empty space separates the curved bands.
-          const phase = y / 65 + x / 280
-            + 1.35 * Math.sin(x / 250 + elapsed * 0.045)
-            + 0.5 * Math.sin((x + y) / 370 - elapsed * 0.025)
-            - elapsed * 0.075;
-          const depth = Math.pow((1 - Math.cos(phase)) / 2, 7);
-          if (depth < 0.045) continue;
-          const index = Math.min(glyphs.length - 1, Math.floor(depth * glyphs.length));
-          context.fillStyle = `rgba(157, 178, 187, ${0.025 + depth * 0.13})`;
-          context.fillText(glyphs[index], x, y);
+    function noise(x: number, y: number, z: number) {
+      const ix = Math.floor(x), iy = Math.floor(y), iz = Math.floor(z);
+      const smooth = (v: number) => v * v * (3 - 2 * v);
+      const fx = smooth(x - ix), fy = smooth(y - iy), fz = smooth(z - iz);
+      const mix = (a: number, b: number, t: number) => a + (b - a) * t;
+      const plane = (k: number) => mix(
+        mix(hash(ix, iy, k), hash(ix + 1, iy, k), fx),
+        mix(hash(ix, iy + 1, k), hash(ix + 1, iy + 1, k), fx), fy);
+      return mix(plane(iz), plane(iz + 1), fz);
+    }
+
+    // Render the small glyphs once; each frame only copies these crisp tiles.
+    const atlas = document.createElement('canvas');
+    const atlasContext = atlas.getContext('2d');
+    const tileRatio = Math.min(window.devicePixelRatio || 1, 2);
+    const tileWidth = Math.ceil(cellWidth * tileRatio);
+    const tileHeight = Math.ceil(cellHeight * tileRatio);
+    atlas.width = tileWidth * glyphs.length;
+    atlas.height = tileHeight * 8;
+    if (atlasContext) {
+      atlasContext.font = `${fontSize * tileRatio}px ui-monospace, Menlo, Consolas, monospace`;
+      atlasContext.textAlign = 'center';
+      atlasContext.textBaseline = 'middle';
+      for (let shade = 0; shade < 8; shade++) {
+        atlasContext.fillStyle = `rgba(154, 166, 171, ${0.05 + shade * 0.021})`;
+        for (let glyph = 0; glyph < glyphs.length; glyph++) {
+          atlasContext.fillText(glyphs[glyph], (glyph + 0.5) * tileWidth, (shade + 0.5) * tileHeight);
         }
       }
+    }
+
+    function draw() {
+      if (!canvas || !context || !atlasContext) return;
+      context.clearRect(0, 0, width, height);
+
+      // Sample the field on a coarse grid, then interpolate for every character.
+      const spacing = 20;
+      const columns = Math.ceil(width / spacing) + 1;
+      const rows = Math.ceil(height / spacing) + 1;
+      const field = new Float32Array(columns * rows);
+      const t = elapsed * 0.16;
+      const messageX = Math.max(0, Math.floor((width - 25) / cellWidth) - hiddenMessage.length);
+      const messageY = Math.max(0, Math.floor((height - 28) / cellHeight));
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < columns; col++) {
+          const x = col * spacing / 180, y = row * spacing / 180;
+          field[row * columns + col] =
+            noise(x, y, t) * 0.57
+            + noise(x * 2.1 + 13, y * 2.1 + 7, t * 1.2) * 0.28
+            + noise(x * 4.3 + 31, y * 4.3 + 19, t * 0.8) * 0.15;
+        }
+      }
+
+      for (let y = 0; y < height; y += cellHeight) {
+        const row = Math.floor(y / spacing), fy = y / spacing - row;
+        for (let x = 0; x < width; x += cellWidth) {
+          const col = Math.floor(x / spacing), fx = x / spacing - col;
+          const i = row * columns + col;
+          const top = field[i] * (1 - fx) + field[i + 1] * fx;
+          const bottom = field[i + columns] * (1 - fx) + field[i + columns + 1] * fx;
+          const level = (top * (1 - fy) + bottom * fy) * 12;
+          const band = level - Math.floor(level);
+          const contour = Math.pow(1 - Math.abs(band * 2 - 1), 2);
+          const grain = hash(x, y, Math.floor(level * 2));
+          const glyph = Math.min(glyphs.length - 1, Math.floor((contour * 0.75 + grain * 0.25) * glyphs.length));
+          const shade = Math.min(7, Math.floor(contour * 6 + grain * 2));
+          const letter = x / cellWidth - messageX;
+          const isMessage = y / cellHeight === messageY
+            && letter >= 0 && letter < hiddenMessage.length;
+          // Every cell is drawn, keeping the texture dense between contour lines.
+          context.globalAlpha = isMessage ? 0 : 1;
+          context.drawImage(atlas, glyph * tileWidth, shade * tileHeight,
+            tileWidth, tileHeight, x, y, cellWidth, cellHeight);
+          if (isMessage) {
+            context.globalAlpha = 1;
+            context.font = `${fontSize}px ui-monospace, Menlo, Consolas, monospace`;
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            context.fillStyle = 'rgba(154, 166, 171, 0.21)';
+            context.fillText(hiddenMessage[letter], x + cellWidth / 2, y + cellHeight / 2);
+          }
+        }
+      }
+      context.globalAlpha = 1;
     }
 
     function resize() {
@@ -51,8 +124,8 @@
     }
 
     function animate(now: number) {
-      if (now - lastDraw >= 1000 / 12) {
-        // Cap the delta so resuming a hidden tab never jumps the pattern.
+      if (now - lastDraw >= frameInterval) {
+        // Avoid jumps when returning to a suspended browser tab.
         elapsed += Math.min((now - lastDraw) / 1000, 0.15);
         lastDraw = now;
         draw();
@@ -75,6 +148,8 @@
     window.addEventListener('resize', resize, { passive: true });
     document.addEventListener('visibilitychange', updateMotion);
     motion.addEventListener('change', updateMotion);
+    window.addEventListener('pagehide', () => window.cancelAnimationFrame(frame));
+    window.addEventListener('pageshow', updateMotion);
   }
 </script>
 
