@@ -1,7 +1,6 @@
 ---
 import { publications } from '../data/publications';
 import AsciiBackground from '../components/AsciiBackground.astro';
-const years = [...new Set(publications.map((paper) => paper.year))].sort((a, b) => b - a);
 ---
 
 <!doctype html>
@@ -51,9 +50,7 @@ const years = [...new Set(publications.map((paper) => paper.year))].sort((a, b) 
       <main>
         <section class="panel accent-orange" id="about" aria-labelledby="about-title">
           <h2 id="about-title">01 / About</h2>
-          <p>Hi, I’m Devesh! I’m a third-year PhD student in Robotics at <a href="https://www.gatech.edu/">Georgia Tech</a> and a graduate researcher in the Trustworthy Robotics Lab.</p>
-          <p>I’m interested in building robots that are both capable and provably safe. I believe performant and safe robotics starts with principles from control theory and statistics. Scaling data, compute, and tuning helps, but mostly pushes us toward a local optimum. The real leap is using ML to discover representations that principled methods can exploit.</p>
-          <p>My current work brings together learned world models, Koopman operators, conformal prediction, and robust control. My goal is to make reliable, real-time planning and control scale to complex robotic systems, while retaining meaningful safety guarantees.</p>
+          <p>I’m Devesh, a third-year Robotics PhD student at <a href="https://www.gatech.edu/">Georgia Tech</a> in the Trustworthy Robotics Lab. I build capable, provably safe robots using control theory, statistics, and learned representations. Scaling data, compute, and tuning mostly pushes us toward a local optimum; the real leap is learning representations that principled methods can exploit. I work on world models, Koopman operators, conformal prediction, and robust control to make real-time planning scale with meaningful safety guarantees.</p>
         </section>
 
         <section class="panel accent-green" id="education" aria-labelledby="education-title">
@@ -72,39 +69,33 @@ const years = [...new Set(publications.map((paper) => paper.year))].sort((a, b) 
 
         <section class="panel accent-teal" id="publications" aria-labelledby="publications-title">
           <h2 id="publications-title">03 / Publications</h2>
-          <p class="contribution-note">( * indicates equal contribution )</p>
-          {years.map((year) => (
-            <div class="publication-year">
-              <h3 class="year">{year}</h3>
-              <div class="papers">
-                {publications.filter((paper) => paper.year === year).map((paper) => (
-                  <article class="paper" id={paper.slug} aria-labelledby={`${paper.slug}-title`}>
-                    <div class="figure">
-                      {paper.media ? (
-                        paper.media.type === 'video' ? (
-                          <video src={paper.media.src} autoplay loop muted playsinline controls preload="metadata" aria-label={`Research video for ${paper.title}`} />
-                        ) : (
-                          <img src={paper.media.src} alt={`Research overview for ${paper.title}`} loading="lazy" />
-                        )
-                      ) : (
-                        <div class="media-placeholder" role="img" aria-label={`Image or video placeholder for ${paper.title}`}></div>
-                      )}
-                    </div>
-                    <div class="paper-content">
-                      <h4 id={`${paper.slug}-title`}>{paper.title}</h4>
-                      <p class="authors">{paper.authors.split('Devesh Nath').map((part, index) => <>{index > 0 && <strong>Devesh Nath</strong>}{part}</>)}</p>
-                      <p class="venue">{paper.venue}{paper.distinction && <> · <span class="distinction">{paper.distinction}</span></>}</p>
-                      <div class="paper-buttons">
-                        <a class="button" href={paper.paperUrl} data-placeholder={paper.paperUrl === '#' ? '' : undefined} title={paper.paperUrl === '#' ? 'Paper link coming soon' : 'Read the paper'} aria-label={`Paper: ${paper.title}${paper.paperUrl === '#' ? ' (link coming soon)' : ''}`}>Paper</a>
-                        <a class="button" href={`/projects/${paper.slug}/`} aria-label={`Project website: ${paper.title}`}>Website</a>
-                        <a class="button" href={paper.videoUrl} data-placeholder={paper.videoUrl === '#' ? '' : undefined} title={paper.videoUrl === '#' ? 'Video link coming soon' : 'Watch the video'} aria-label={`Video: ${paper.title}${paper.videoUrl === '#' ? ' (link coming soon)' : ''}`}>Video</a>
-                      </div>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-          ))}
+          <div class="papers">
+            {publications.map((paper) => (
+              <article class="paper" id={paper.slug} aria-labelledby={`${paper.slug}-title`}>
+                <div class="figure">
+                  {paper.media ? (
+                    paper.media.type === 'video' ? (
+                      <video src={paper.media.src} autoplay loop muted playsinline controls preload="metadata" aria-label={`Research video for ${paper.title}`} />
+                    ) : (
+                      <img src={paper.media.src} alt={`Research overview for ${paper.title}`} loading="lazy" />
+                    )
+                  ) : (
+                    <div class="media-placeholder" role="img" aria-label={`Image or video placeholder for ${paper.title}`}></div>
+                  )}
+                </div>
+                <div class="paper-content">
+                  <h4 id={`${paper.slug}-title`}>{paper.title}</h4>
+                  <p class="authors">{paper.authors.split('Devesh Nath').map((part, index) => <>{index > 0 && <strong>Devesh Nath</strong>}{part}</>)}</p>
+                  <p class="venue">{paper.venue}{paper.distinction && <> · <span class="distinction">{paper.distinction}</span></>}</p>
+                  <div class="paper-buttons">
+                    <a class="button" href={paper.paperUrl} data-placeholder={paper.paperUrl === '#' ? '' : undefined} title={paper.paperUrl === '#' ? 'Paper link coming soon' : 'Read the paper'} aria-label={`Paper: ${paper.title}${paper.paperUrl === '#' ? ' (link coming soon)' : ''}`}>Paper</a>
+                    <a class="button" href={`/projects/${paper.slug}/`} aria-label={`Project website: ${paper.title}`}>Website</a>
+                    <a class="button" href={paper.videoUrl} data-placeholder={paper.videoUrl === '#' ? '' : undefined} title={paper.videoUrl === '#' ? 'Video link coming soon' : 'Watch the video'} aria-label={`Video: ${paper.title}${paper.videoUrl === '#' ? ' (link coming soon)' : ''}`}>Video</a>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
         </section>
       </main>
       <footer>Devesh Nath</footer>
@@ -158,16 +149,12 @@ const years = [...new Set(publications.map((paper) => paper.year))].sort((a, b) 
   .accent-green { --accent: var(--green); }
   .accent-teal { --accent: var(--teal); }
   h2 { color: var(--accent); font-size: 16px; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase; line-height: 1.35; margin-bottom: 16px; }
-  #about p + p { margin-top: 16px; }
   .education-entry h3 { font-size: 15px; line-height: 1.7; font-weight: 700; }
   .education-entry + .education-entry { margin-top: 22px; padding-top: 22px; border-top: 1px dashed var(--line); }
   .degree { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 5px 12px; padding: 10px 0 6px; font-size: 13px; }
   .degree > span:first-child::before { content: ''; display: inline-block; vertical-align: 3px; width: 12px; height: 2px; background: var(--accent); margin-right: 10px; }
   .date { color: var(--teal); background: #242e32; border-radius: 3px; padding: 0 8px; font-size: 11px; }
   .education-detail { margin-left: 22px; color: var(--muted); font-size: 12px; }
-  .contribution-note { color: var(--muted); font-size: 12px; font-style: italic; margin-bottom: 20px; }
-  .year { font-size: 14px; font-weight: 700; letter-spacing: 1.5px; border-bottom: 1px solid var(--line); padding-bottom: 9px; margin-bottom: 24px; }
-  .publication-year + .publication-year { margin-top: 30px; }
   .paper { display: grid; grid-template-columns: 22% minmax(0, 1fr); gap: 4%; margin-bottom: 26px; scroll-margin-top: 20px; }
   .paper:last-child { margin-bottom: 0; }
   .figure { padding-top: 3px; }
