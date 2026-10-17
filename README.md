@@ -30,3 +30,9 @@ npm run build
 - `src/pages/projects/<slug>/index.astro`: each project’s page in its own folder.
 - `public/projects/<slug>/assets/`: each project’s videos, images, and PDFs. A file such as `public/projects/micrompc/assets/demo.mp4` is served at `/projects/micrompc/assets/demo.mp4`. Use that URL in a `<video src="...">` or in a publication’s `media.src`.
 - `public/Resume.pdf`: downloadable résumé.
+
+## Pixels to Proofs thumbnail
+
+Source clips live in `src/pages/projects/pixels-to-proofs/`. The three `*_robust.mp4` clips are cropped to the top 512 pixels, retaining their colored borders and excluding the reachable-set plots.
+
+Run `python3 scripts/build-pixels-thumbnail.py` (requires ffmpeg) to rebuild the clips in `public/projects/pixels-to-proofs/assets/thumbnails/`. The loop plays nominal Reacher/Cube/Rope, robust Reacher/Cube/Rope, PushT, and finally hardware rope. The thumbnail plays unpadded clips in a fixed 8:5 frame, with black bars where needed to preserve each clip’s proportions.
