@@ -21,7 +21,9 @@ import AsciiBackground from '../components/AsciiBackground.astro';
     <a class="skip-link" href="#about">Skip to content</a>
     <div class="container">
       <header class="header">
-        <div class="portrait" role="img" aria-label="Profile photo placeholder"></div>
+        <div class="portrait">
+          <img src="/images/me.jpeg" alt="Devesh Nath" width="1200" height="1600" fetchpriority="high" />
+        </div>
         <div class="intro">
           <h1>Devesh Nath</h1>
           <p>Third-year PhD Student, Robotics · Georgia Tech</p>
@@ -131,7 +133,8 @@ import AsciiBackground from '../components/AsciiBackground.astro';
   h1, h2, h3, h4, p { margin: 0; }
   .container { position: relative; z-index: 1; width: 80%; max-width: 800px; margin: 0 auto; }
   .header { display: grid; grid-template-columns: 22% 1fr; gap: 4%; align-items: center; margin: 50px 0 60px; }
-  .portrait { width: 100%; aspect-ratio: 1; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; }
+  .portrait { width: 100%; aspect-ratio: 1; overflow: hidden; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; }
+  .portrait img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 55%; transform: scale(1.85); transform-origin: 50% 55%; }
   h1 { margin-bottom: 4px; font-size: 34px; font-weight: 700; letter-spacing: -.8px; line-height: 1.2; }
   .intro p { font-size: 13px; line-height: 1.75; color: var(--muted); }
   .email { color: inherit; font-weight: 400; }

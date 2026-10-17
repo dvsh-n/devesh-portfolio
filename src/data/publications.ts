@@ -72,7 +72,7 @@ export const publications: Publication[] = [
     media: null, // Set to { src: '/media/example.mp4', type: 'video' } or type: 'image'.
     title: 'Adaptive Conformal Prediction Via Learned Residual-Law Retrieval',
     venue: 'ICLR 2027 · In Submission',
-    authors: 'Devesh Nath, Glen Chou',
+    authors: 'Devesh Nath, Rahul Rustagi, Glen Chou',
     description: 'Scaling conformal prediction to high-dimensional statistical inference, with applications to multimodal trajectory uncertainty in autonomous driving and long horizon robot reachability.',
     topics: ['Scalable Conformal Prediction', 'Learned Uncertainty Representation', 'Conformal Multimodal Autonomous Driving', 'High Dimensional Reachability'],
   },
