@@ -35,4 +35,4 @@ npm run build
 
 Source clips live in `src/pages/projects/pixels-to-proofs/`. The three `*_robust.mp4` clips are cropped to the top 512 pixels, retaining their colored borders and excluding the reachable-set plots.
 
-Run `python3 scripts/build-pixels-thumbnail.py` (requires ffmpeg) to rebuild the clips in `public/projects/pixels-to-proofs/assets/thumbnails/`. The loop plays nominal Reacher/Cube/Rope, robust Reacher/Cube/Rope, PushT, and finally hardware rope. The thumbnail plays unpadded clips in a fixed 8:5 frame, with black bars where needed to preserve each clip’s proportions.
+Run `python3 scripts/build-pixels-thumbnail.py` (requires ffmpeg) to rebuild `public/projects/pixels-to-proofs/assets/thumbnail.mp4`. The loop plays nominal Reacher/Cube/Rope, robust Reacher/Cube/Rope, PushT, and finally hardware rope. The thumbnail is a single looping video in a fixed 8:5 frame, with a dim, blurred version of each clip filling the unused space while preserving the full video. Clip transitions are encoded into the file, so playback never swaps sources.

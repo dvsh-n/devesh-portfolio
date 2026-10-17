@@ -10,7 +10,7 @@ export interface Publication {
   paperUrl: string;
   videoUrl: string;
   websiteUrl?: string;
-  media: { src: string; type: 'image' | 'video'; playlist?: string[] } | null;
+  media: { src: string; type: 'image' | 'video' } | null;
 }
 
 export const publications: Publication[] = [
@@ -20,12 +20,7 @@ export const publications: Publication[] = [
     paperUrl: 'https://arxiv.org/pdf/2606.15594',
     videoUrl: 'https://www.youtube.com/watch?v=3sYYNSQqwSQ',
     websiteUrl: 'https://trustworthyrobotics.github.io/SLS-squared/',
-    media: {
-      src: '/projects/pixels-to-proofs/assets/thumbnails/reacher.mp4',
-      type: 'video',
-      playlist: ['reacher', 'cube', 'rope', 'reacher_robust', 'cube_robust', 'rope_robust', 'pusht', 'hardware']
-        .map((clip) => `/projects/pixels-to-proofs/assets/thumbnails/${clip}.mp4`),
-    },
+    media: { src: '/projects/pixels-to-proofs/assets/thumbnail.mp4', type: 'video' },
     title: 'Pixels to Proofs: Probabilistically Safe Latent World Model Control via Parallel Conformal Robust MPC',
     venue: 'RSS 2026 · Robot World Model Workshop',
     authors: 'Devesh Nath*, Anutam Srinivasan*, Haoran Yin*, Ruitong Jiang, Jeffrey Fang, Glen Chou',

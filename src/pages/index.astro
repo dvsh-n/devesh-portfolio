@@ -77,7 +77,9 @@ import AsciiBackground from '../components/AsciiBackground.astro';
                 <div class="figure">
                   {paper.media ? (
                     paper.media.type === 'video' ? (
-                      <video src={paper.media.src} data-playlist={paper.media.playlist ? JSON.stringify(paper.media.playlist) : undefined} autoplay loop={!paper.media.playlist} muted playsinline disablepictureinpicture disableremoteplayback preload="metadata" aria-label={`Research video for ${paper.title}`} />
+                      <div class="video-frame">
+                        <video src={paper.media.src} autoplay loop muted playsinline disablepictureinpicture disableremoteplayback preload="auto" aria-label={`Research video for ${paper.title}`} />
+                      </div>
                     ) : (
                       <img src={paper.media.src} alt={`Research overview for ${paper.title}`} loading="lazy" />
                     )
@@ -103,16 +105,6 @@ import AsciiBackground from '../components/AsciiBackground.astro';
       <footer>Devesh Nath</footer>
     </div>
     <script>
-      // Play unpadded clips inside the same fixed thumbnail frame.
-      document.querySelectorAll<HTMLVideoElement>('video[data-playlist]').forEach((video) => {
-        const clips: string[] = JSON.parse(video.dataset.playlist!);
-        let current = 0;
-        video.addEventListener('ended', () => {
-          current = (current + 1) % clips.length;
-          video.src = clips[current];
-          video.play().catch(() => { /* Autoplay may be restricted by the browser. */ });
-        });
-      });
       // Placeholder links remain on the current publication until real URLs are added.
       document.querySelectorAll<HTMLAnchorElement>('a[data-placeholder]').forEach((link) => {
         link.addEventListener('click', (event) => event.preventDefault());
@@ -175,8 +167,9 @@ import AsciiBackground from '../components/AsciiBackground.astro';
   .paper:last-child { margin-bottom: 0; }
   .figure { padding-top: 3px; }
   .media-placeholder { aspect-ratio: 8 / 5; width: 100%; background: #222223; border: 1px solid var(--line); border-radius: 4px; }
-  .figure img, .figure video { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 4px; }
-  .figure video { aspect-ratio: 8 / 5; object-fit: contain; background: #000; }
+  .figure img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 4px; }
+  .video-frame { position: relative; isolation: isolate; width: 100%; aspect-ratio: 8 / 5; overflow: hidden; border: 1px solid var(--line); border-radius: 6px; background: #24282b; }
+  .figure video { display: block; width: 100%; height: 100%; object-fit: contain; background: transparent; }
   .paper h4 { font-size: 15px; line-height: 1.7; font-weight: 700; margin-bottom: 2px; overflow-wrap: anywhere; }
   .authors { font-size: 13px; line-height: 1.7; color: var(--muted); margin-bottom: 2px; }
   .authors strong { color: var(--ink); font-weight: 700; }
