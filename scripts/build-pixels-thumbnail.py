@@ -27,12 +27,13 @@ with tempfile.TemporaryDirectory(prefix='pixels-thumbnail-') as directory:
             'ffmpeg', '-hide_banner', '-loglevel', 'error',
             '-i', str(SOURCE / name),
             '-filter_complex',
-            '[0:v]fps=24,setsar=1,split=2[front][back];'
+            # The canvas fits every source at full resolution; 60 fps retains all source frames.
+            '[0:v]fps=60,setsar=1,split=2[front][back];'
             '[back]scale=640:400:force_original_aspect_ratio=increase,'
-            'crop=640:400,gblur=sigma=55:steps=3,eq=brightness=-0.12:saturation=0.6,colorchannelmixer=rr=0.55:gg=0.55:bb=0.55[bg];'
-            '[front]scale=640:400:force_original_aspect_ratio=decrease:force_divisible_by=2[fg];'
+            'crop=640:400,gblur=sigma=55:steps=3,eq=brightness=-0.12:saturation=0.6,colorchannelmixer=rr=0.55:gg=0.55:bb=0.55,scale=2080:1300[bg];'
+            '[front]scale=2080:1300:force_original_aspect_ratio=decrease:force_divisible_by=2[fg];'
             '[bg][fg]overlay=(W-w)/2:(H-h)/2,setsar=1,format=yuv420p[out]',
-            '-map', '[out]', '-an', '-c:v', 'libx264', '-crf', '22', '-preset', 'medium',
+            '-map', '[out]', '-an', '-c:v', 'libx264', '-crf', '16', '-preset', 'medium',
             '-video_track_timescale', '12288', str(work / f'{index}.mp4'),
         ], check=True)
     (work / 'clips.txt').write_text(''.join(f"file '{i}.mp4'\n" for i in range(len(CLIPS))))

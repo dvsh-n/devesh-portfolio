@@ -32,7 +32,7 @@ export const publications: Publication[] = [
     year: 2026,
     paperUrl: '#', // Replace with the arXiv URL.
     videoUrl: '#', // Replace with the YouTube URL.
-    media: null, // Set to { src: '/media/example.mp4', type: 'video' } or type: 'image'.
+    media: { src: '/projects/koopman-reachability/assets/thumbnail.mp4', type: 'video' },
     title: 'Scalable Data-Driven Reachability Analysis and Control via Koopman Operators with Conformal Coverage Guarantees',
     venue: 'L4DC 2026',
     distinction: 'Best Paper Finalist',
