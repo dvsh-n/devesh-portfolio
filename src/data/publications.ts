@@ -15,6 +15,18 @@ export interface Publication {
 
 export const publications: Publication[] = [
   {
+    slug: 'micrompc',
+    year: 2027,
+    paperUrl: '#', // Replace with the arXiv URL.
+    videoUrl: '#', // Replace with the YouTube URL.
+    media: { src: '/projects/micrompc/assets/thumbnail.mp4', type: 'video' },
+    title: 'μMPC: Safe Nonlinear and World Model Control in Microseconds via Koopman-Linearized Pre-Compilation',
+    venue: 'ICRA 2027 · In Submission',
+    authors: 'Devesh Nath, Glen Chou',
+    description: 'Enabling microsecond scale nonlinear robotic planning. Applied for sub-millisecond vision-based planning with linear world models and fast, efficient high-dimensional robot control.',
+    topics: ['Scalable Nonlinear Optimal Control', 'Fast Unitree Go2 Control', 'Real-time Control with World Models', 'Highly Scalable Multi-Agent Planning'],
+  },
+  {
     slug: 'pixels-to-proofs',
     year: 2026,
     paperUrl: 'https://arxiv.org/pdf/2606.15594',
@@ -41,24 +53,12 @@ export const publications: Publication[] = [
     topics: ['Scalable Nonlinear Reachability', 'Conformal Safety Guarantees', 'Learned Koopman Linearization', 'Black Box Dynamics'],
   },
   {
-    slug: 'micrompc',
-    year: 2027,
-    paperUrl: '#', // Replace with the arXiv URL.
-    videoUrl: '#', // Replace with the YouTube URL.
-    media: { src: '/projects/micrompc/assets/thumbnail.mp4', type: 'video' },
-    title: 'μMPC: Safe Nonlinear and World Model Control in Microseconds via Koopman-Linearized Pre-Compilation',
-    venue: 'ICRA 2027 · In Submission',
-    authors: 'Devesh Nath, Glen Chou',
-    description: 'Enabling microsecond scale nonlinear robotic planning. Applied for sub-millisecond vision-based planning with linear world models and fast, efficient high-dimensional robot control.',
-    topics: ['Scalable Nonlinear Optimal Control', 'Fast Unitree Go2 Control', 'Real-time Control with World Models', 'Highly Scalable Multi-Agent Planning'],
-  },
-  {
     slug: 'adaptive-conformal-prediction',
     year: 2027,
     paperUrl: '#', // Replace with the arXiv URL.
     videoUrl: '#', // Replace with the YouTube URL.
     media: { src: '/projects/adaptive-conformal-prediction/assets/thumbnail.mp4', type: 'video' },
-    title: 'Adaptive Conformal Prediction Via Learned Residual-Law Retrieval',
+    title: 'Factorized Conformal Prediction Via Learned Residual-Law Retrieval',
     venue: 'ICLR 2027 · In Submission',
     authors: 'Devesh Nath, Rahul Rustagi, Glen Chou',
     description: 'Scaling conformal prediction to high-dimensional statistical inference, with applications to multimodal trajectory uncertainty in autonomous driving and long horizon robot reachability.',
