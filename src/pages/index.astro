@@ -188,10 +188,10 @@ import AsciiBackground from '../components/AsciiBackground.astro';
   }
   @media (max-width: 549px) {
     .container { width: calc(100% - 36px); }
-    .header { grid-template-columns: 96px minmax(0, 1fr); gap: 20px; margin: 36px 0; align-items: start; }
+    .header { grid-template-columns: minmax(0, 1fr); gap: 20px; margin: 36px 0; align-items: start; }
     h1 { font-size: 25px; line-height: 1.3; }
     .intro p { font-size: 11px; overflow-wrap: anywhere; }
-    .portrait { aspect-ratio: 1; }
+    .portrait { width: 200px; max-width: 100%; aspect-ratio: 1; }
     .section-nav { gap: 22px; min-height: 58px; }
     .section-nav a { min-height: 57px; font-size: 10px; letter-spacing: 1px; }
     .panel { padding: 24px 20px; }
