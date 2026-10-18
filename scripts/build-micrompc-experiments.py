@@ -1,4 +1,4 @@
-"""Edit the original experiments section, enlarge comparisons, and play at 2x."""
+"""Edit the original experiments section, enlarge comparisons, at normal speed."""
 from pathlib import Path
 import subprocess
 
@@ -21,15 +21,15 @@ filters = (
     f"[r][cubebig]overlay=216:10:enable='{cube}'[c];"
     '[1:v]crop=1920:220:64:252,scale=2120:-2:flags=lanczos[caption];'
     f"[c][caption]overlay=(W-w)/2:1490:enable='{cube}',"
-    'setpts=0.5*PTS,setsar=1,format=yuv420p[out]'
+    'setpts=PTS-STARTPTS,setsar=1,format=yuv420p[out]'
 )
 subprocess.run([
     'ffmpeg', '-hide_banner', '-loglevel', 'error', '-y',
     '-ss', '126', '-t', '66', '-i', str(PROJECT / 'muMPC_orig.mp4'),
     '-i', str(PROJECT / 'assets/hardware-cube-caption.png'),
     '-filter_complex', filters, '-map', '[out]', '-map', '0:a:0',
-    '-r', '60', '-c:v', 'libx264', '-crf', '14', '-preset', 'medium',
-    '-af', 'atempo=2', '-c:a', 'aac', '-b:a', '192k',
+    '-r', '30', '-c:v', 'libx264', '-crf', '14', '-preset', 'medium',
+    '-c:a', 'aac', '-b:a', '192k',
     '-movflags', '+faststart', str(TEMP),
 ], check=True)
 TEMP.replace(OUTPUT)

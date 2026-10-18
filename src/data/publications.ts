@@ -57,7 +57,7 @@ export const publications: Publication[] = [
     year: 2027,
     paperUrl: '#', // Replace with the arXiv URL.
     videoUrl: '#', // Replace with the YouTube URL.
-    media: null, // Set to { src: '/media/example.mp4', type: 'video' } or type: 'image'.
+    media: { src: '/projects/adaptive-conformal-prediction/assets/thumbnail.mp4', type: 'video' },
     title: 'Adaptive Conformal Prediction Via Learned Residual-Law Retrieval',
     venue: 'ICLR 2027 · In Submission',
     authors: 'Devesh Nath, Rahul Rustagi, Glen Chou',

@@ -15,7 +15,7 @@ subprocess.run([
     '[back]scale=640:400:force_original_aspect_ratio=increase,crop=640:400,'
     'gblur=sigma=55:steps=3,eq=brightness=-0.12:saturation=0.6,'
     'colorchannelmixer=rr=0.55:gg=0.55:bb=0.55,scale=3232:2020[bg];'
-    '[bg][fg]overlay=(W-w)/2:(H-h)/2,setsar=1,format=yuv420p[out]',
+    '[bg][fg]overlay=(W-w)/2:(H-h)/2,setsar=1,format=yuv420p,tpad=stop_mode=clone:stop_duration=1[out]',
     '-map', '[out]', '-an', '-c:v', 'libx264', '-crf', '16', '-preset', 'medium',
     '-movflags', '+faststart', str(OUTPUT),
 ], check=True)

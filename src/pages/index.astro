@@ -109,6 +109,108 @@ import AsciiBackground from '../components/AsciiBackground.astro';
       document.querySelectorAll<HTMLAnchorElement>('a[data-placeholder]').forEach((link) => {
         link.addEventListener('click', (event) => event.preventDefault());
       });
+
+      const desktopHover = window.matchMedia('(min-width: 750px) and (hover: hover) and (pointer: fine)');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const motion = new Map<HTMLElement, Animation>();
+      const timing = { duration: 520, easing: 'cubic-bezier(.22, 1, .36, 1)' };
+      const animate = (element: HTMLElement, frames: Keyframe[]) => {
+        if (reducedMotion.matches) return;
+        const animation = element.animate(frames, timing);
+        motion.set(element, animation);
+        animation.onfinish = () => {
+          if (motion.get(element) === animation) motion.delete(element);
+        };
+      };
+
+      document.querySelectorAll<HTMLElement>('.paper').forEach((paper) => {
+        const content = paper.querySelector<HTMLElement>('.paper-content')!;
+        const figure = paper.querySelector<HTMLElement>('.figure')!;
+        let measuredWidth = 0;
+
+        const measure = () => {
+          if (!desktopHover.matches) {
+            motion.forEach((animation) => animation.cancel());
+            motion.clear();
+            paper.classList.remove('hover-ready', 'is-expanded');
+            measuredWidth = 0;
+            return;
+          }
+          const width = paper.clientWidth;
+          if (!width || width === measuredWidth) return;
+          measuredWidth = width;
+
+          // Measure both text layouts without moving the visible text or video.
+          const probe = content.cloneNode(true) as HTMLElement;
+          probe.querySelectorAll('[id]').forEach((element) => element.removeAttribute('id'));
+          probe.setAttribute('aria-hidden', 'true');
+          probe.inert = true;
+          probe.style.cssText = 'position:fixed;left:-10000px;top:0;visibility:hidden;pointer-events:none;height:auto;transition:none;';
+          paper.append(probe);
+          probe.style.width = `${width * 0.61}px`;
+          const compactTextHeight = probe.getBoundingClientRect().height;
+          probe.style.width = `${width}px`;
+          const fullTextHeight = probe.getBoundingClientRect().height;
+          probe.remove();
+
+          const image = figure.querySelector('img');
+          const ratio = image?.naturalWidth && image.naturalHeight
+            ? image.naturalWidth / image.naturalHeight : 8 / 5;
+          const videoTop = Math.ceil(fullTextHeight) + 18;
+          paper.style.setProperty('--compact-height', `${Math.ceil(Math.max(compactTextHeight, width * 0.36 / ratio + 3))}px`);
+          paper.style.setProperty('--expanded-top', `${videoTop}px`);
+          paper.style.setProperty('--expanded-height', `${Math.ceil(videoTop + width / ratio + 3)}px`);
+          paper.classList.add('hover-ready');
+        };
+
+        const setExpanded = (expanded: boolean) => {
+          measure();
+          if (!desktopHover.matches || paper.classList.contains('is-expanded') === expanded) return;
+
+          // Read the current visual positions, including any interrupted animation.
+          const following = Array.from(document.querySelectorAll<HTMLElement>('.paper, footer'))
+            .filter((element) => Boolean(paper.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_FOLLOWING));
+          const before = following.map((element) => element.getBoundingClientRect().top);
+          const figureTransform = getComputedStyle(figure).transform;
+          const contentLeft = content.getBoundingClientRect().left;
+          const contentOpacity = getComputedStyle(content).opacity;
+          [figure, content, ...following].forEach((element) => {
+            motion.get(element)?.cancel();
+            motion.delete(element);
+          });
+
+          // Commit the destination layout once. Only transforms and opacity animate.
+          paper.classList.toggle('is-expanded', expanded);
+          const destinationTransform = getComputedStyle(figure).transform;
+          const destinationLeft = content.getBoundingClientRect().left;
+          const after = following.map((element) => element.getBoundingClientRect().top);
+          animate(figure, [{ transform: figureTransform }, { transform: destinationTransform }]);
+          animate(content, [
+            { transform: `translate3d(${contentLeft - destinationLeft}px, 0, 0)`, opacity: Math.min(Number(contentOpacity), 0.7) },
+            { transform: 'translate3d(0, 0, 0)', opacity: 1 },
+          ]);
+          following.forEach((element, index) => {
+            const offset = before[index] - after[index];
+            if (Math.abs(offset) > 0.5) animate(element, [
+              { transform: `translate3d(0, ${offset}px, 0)` },
+              { transform: 'translate3d(0, 0, 0)' },
+            ]);
+          });
+        };
+        paper.addEventListener('pointerenter', () => setExpanded(true));
+        paper.addEventListener('pointerleave', () => setExpanded(false));
+        desktopHover.addEventListener('change', measure);
+        new ResizeObserver(measure).observe(paper);
+        figure.querySelector('img')?.addEventListener('load', () => {
+          measuredWidth = 0;
+          measure();
+        });
+        document.fonts.ready.then(() => {
+          measuredWidth = 0;
+          measure();
+        });
+        measure();
+      });
     </script>
   </body>
 </html>
@@ -181,6 +283,25 @@ import AsciiBackground from '../components/AsciiBackground.astro';
   footer { border-top: 1px solid var(--line); padding: 15px 0 40px; text-align: center; color: var(--muted); font-size: 12px; }
   .skip-link { position: absolute; top: -100px; left: 20px; padding: 8px 14px; background: var(--panel); z-index: 10; }
   .skip-link:focus { top: 10px; }
+  @media (min-width: 750px) and (hover: hover) and (pointer: fine) {
+    .paper.hover-ready {
+      display: block;
+      position: relative;
+      height: var(--compact-height);
+      overflow-anchor: none;
+    }
+    .paper.hover-ready > .figure,
+    .paper.hover-ready > .paper-content {
+      position: absolute;
+      top: 0;
+      transform-origin: top left;
+    }
+    .paper.hover-ready > .figure { left: 0; width: 100%; transform: translate3d(0, 0, 0) scale(.36); }
+    .paper.hover-ready > .paper-content { left: 39%; width: 61%; }
+    .paper.hover-ready.is-expanded { height: var(--expanded-height); }
+    .paper.hover-ready.is-expanded > .paper-content { left: 0; width: 100%; }
+    .paper.hover-ready.is-expanded > .figure { transform: translate3d(0, var(--expanded-top), 0) scale(1); }
+  }
   @media (max-width: 749px) {
     .section-nav { gap: 25px; }
     .panel { padding: 26px 28px; }
