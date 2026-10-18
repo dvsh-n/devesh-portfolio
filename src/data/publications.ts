@@ -53,18 +53,6 @@ export const publications: Publication[] = [
     topics: ['Scalable Nonlinear Optimal Control', 'Fast Unitree Go2 Control', 'Real-time Control with World Models', 'Highly Scalable Multi-Agent Planning'],
   },
   {
-    slug: 'generative-planner-safety',
-    year: 2026,
-    paperUrl: '#', // Replace with the arXiv URL.
-    videoUrl: '#', // Replace with the YouTube URL.
-    media: null, // Set to { src: '/media/example.mp4', type: 'video' } or type: 'image'.
-    title: 'Formal Safety Verification and Refinement for Generative Motion Planners via Certified Local Stabilization',
-    venue: 'ICRA 2026',
-    authors: 'Devesh Nath*, Haoran Yin*, Glen Chou',
-    description: 'Bringing formal safety guarantees to diffusion, flow-matching, and vision-language motion planners through certified local stabilization, preserving multimodal behavior without retraining the generative models.',
-    topics: ['Formally Verified Generative Planning', 'Safe Multimodal Planning', 'Certified Local Stabilization', 'Retraining-Free Safety Refinement'],
-  },
-  {
     slug: 'adaptive-conformal-prediction',
     year: 2027,
     paperUrl: '#', // Replace with the arXiv URL.
@@ -75,5 +63,17 @@ export const publications: Publication[] = [
     authors: 'Devesh Nath, Rahul Rustagi, Glen Chou',
     description: 'Scaling conformal prediction to high-dimensional statistical inference, with applications to multimodal trajectory uncertainty in autonomous driving and long horizon robot reachability.',
     topics: ['Scalable Conformal Prediction', 'Learned Uncertainty Representation', 'Conformal Multimodal Autonomous Driving', 'High Dimensional Reachability'],
+  },
+  {
+    slug: 'generative-planner-safety',
+    year: 2026,
+    paperUrl: '#', // Replace with the arXiv URL.
+    videoUrl: '#', // Replace with the YouTube URL.
+    media: { src: '/projects/generative-planner-safety/assets/thumbnail.mp4', type: 'video' },
+    title: 'Formal Safety Verification and Refinement for Generative Motion Planners via Certified Local Stabilization',
+    venue: 'ICRA 2026',
+    authors: 'Devesh Nath*, Haoran Yin*, Glen Chou',
+    description: 'Bringing formal safety guarantees to diffusion, flow-matching, and vision-language motion planners through certified local stabilization, preserving multimodal behavior without retraining the generative models.',
+    topics: ['Formally Verified Generative Planning', 'Safe Multimodal Planning', 'Certified Local Stabilization', 'Retraining-Free Safety Refinement'],
   },
 ];
