@@ -30,13 +30,13 @@ import AsciiBackground from '../components/AsciiBackground.astro';
           <p>Trustworthy Robotics Lab</p>
           <p><a class="email" href="mailto:dnath7@gatech.edu">dnath7 [AT] gatech.edu</a></p>
           <nav class="social-links" aria-label="Contact and profiles">
-            <a href="/Resume.pdf" download aria-label="Download résumé" title="Download résumé">
+            <a href="/Resume.pdf" target="_blank" rel="noopener noreferrer" aria-label="Open résumé" title="Open résumé">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5" /></svg>
             </a>
-            <a href="https://www.linkedin.com/in/deveshnath" aria-label="LinkedIn" title="LinkedIn">
+            <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/deveshnath" aria-label="LinkedIn" title="LinkedIn">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5.2 3a2.2 2.2 0 1 0 0 4.4 2.2 2.2 0 0 0 0-4.4ZM3.4 9h3.6v12H3.4V9Zm6 0h3.4v1.6h.1c.5-1 1.7-1.9 3.5-1.9 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-6c0-1.4 0-3.2-2-3.2s-2.3 1.5-2.3 3.1V21H9.4V9Z" /></svg>
             </a>
-            <a href="https://github.com/dvsh-n" aria-label="GitHub" title="GitHub">
+            <a target="_blank" rel="noopener noreferrer" href="https://github.com/dvsh-n" aria-label="GitHub" title="GitHub">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.86c-2.78.6-3.37-1.18-3.37-1.18-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.64-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03A9.6 9.6 0 0 1 12 6.82c.85 0 1.71.12 2.51.34 1.91-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.6 1.03 2.69 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.76c0 .27.18.58.69.48A10 10 0 0 0 12 2Z" /></svg>
             </a>
           </nav>
@@ -52,7 +52,7 @@ import AsciiBackground from '../components/AsciiBackground.astro';
       <main>
         <section class="panel accent-orange" id="about" aria-labelledby="about-title">
           <h2 id="about-title">01 / About</h2>
-          <p>I’m Devesh, a third-year Robotics PhD student at <a href="https://www.gatech.edu/">Georgia Tech</a> in the Trustworthy Robotics Lab, advised by <a href="https://glenchou.github.io/">Dr. Glen Chou</a>. I develop methods for capable, provably safe robotic planning and control using control theory, statistics, and learned representations. Scaling data, compute, and tuning mostly pushes us toward a local optimum; the real leap is learning representations that principled methods can exploit. I work on world models, Koopman operators, conformal prediction, and robust control to make real-time planning scale with meaningful safety guarantees.</p>
+          <p>I’m Devesh, a third-year Robotics PhD student at <a target="_blank" rel="noopener noreferrer" href="https://www.gatech.edu/">Georgia Tech</a> in the Trustworthy Robotics Lab, advised by <a target="_blank" rel="noopener noreferrer" href="https://glenchou.github.io/">Dr. Glen Chou</a>. I develop methods for capable, provably safe robotic planning and control using control theory, statistics, and learned representations. Scaling data, compute, and tuning mostly pushes us toward a local optimum; the real leap is learning representations that principled methods can exploit. I work on world models, Koopman operators, conformal prediction, and robust control to make real-time planning scale with meaningful safety guarantees.</p>
         </section>
 
         <section class="panel accent-green" id="education" aria-labelledby="education-title">
@@ -92,9 +92,9 @@ import AsciiBackground from '../components/AsciiBackground.astro';
                   <p class="authors">{paper.authors.split('Devesh Nath').map((part, index) => <>{index > 0 && <strong>Devesh Nath</strong>}{part}</>)}</p>
                   <p class="venue">{paper.venue}{paper.distinction && <> · <span class="distinction">{paper.distinction}</span></>}</p>
                   <div class="paper-buttons">
-                    <a class="button" href={paper.paperUrl} data-placeholder={paper.paperUrl === '#' ? '' : undefined} title={paper.paperUrl === '#' ? 'Paper link coming soon' : 'Read the paper'} aria-label={`Paper: ${paper.title}${paper.paperUrl === '#' ? ' (link coming soon)' : ''}`}>Paper</a>
-                    <a class="button" href={paper.websiteUrl ?? `/projects/${paper.slug}/`} aria-label={`Project website: ${paper.title}`}>Website</a>
-                    <a class="button" href={paper.videoUrl} data-placeholder={paper.videoUrl === '#' ? '' : undefined} title={paper.videoUrl === '#' ? 'Video link coming soon' : 'Watch the video'} aria-label={`Video: ${paper.title}${paper.videoUrl === '#' ? ' (link coming soon)' : ''}`}>Video</a>
+                    <a class="button" target="_blank" rel="noopener noreferrer" href={paper.paperUrl} data-placeholder={paper.paperUrl === '#' ? '' : undefined} title={paper.paperUrl === '#' ? 'Paper link coming soon' : 'Read the paper'} aria-label={`Paper: ${paper.title}${paper.paperUrl === '#' ? ' (link coming soon)' : ''}`}>Paper</a>
+                    <a class="button" target="_blank" rel="noopener noreferrer" href={paper.websiteUrl ?? `/projects/${paper.slug}/`} aria-label={`Project website: ${paper.title}`}>Website</a>
+                    <a class="button" target="_blank" rel="noopener noreferrer" href={paper.videoUrl} data-placeholder={paper.videoUrl === '#' ? '' : undefined} title={paper.videoUrl === '#' ? 'Video link coming soon' : 'Watch the video'} aria-label={`Video: ${paper.title}${paper.videoUrl === '#' ? ' (link coming soon)' : ''}`}>Video</a>
                   </div>
                 </div>
               </article>

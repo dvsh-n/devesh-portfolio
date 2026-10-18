@@ -30,7 +30,7 @@ export const publications: Publication[] = [
   {
     slug: 'koopman-reachability',
     year: 2026,
-    paperUrl: '#', // Replace with the arXiv URL.
+    paperUrl: 'https://arxiv.org/pdf/2601.01076',
     videoUrl: '#', // Replace with the YouTube URL.
     media: { src: '/projects/koopman-reachability/assets/thumbnail.mp4', type: 'video' },
     title: 'Scalable Data-Driven Reachability Analysis and Control via Koopman Operators with Conformal Coverage Guarantees',
