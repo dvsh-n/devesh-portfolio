@@ -45,7 +45,7 @@ export const publications: Publication[] = [
     year: 2027,
     paperUrl: '#', // Replace with the arXiv URL.
     videoUrl: '#', // Replace with the YouTube URL.
-    media: null, // Set to { src: '/media/example.mp4', type: 'video' } or type: 'image'.
+    media: { src: '/projects/micrompc/assets/thumbnail.mp4', type: 'video' },
     title: 'μMPC: Safe Nonlinear and World Model Control in Microseconds via Koopman-Linearized Pre-Compilation',
     venue: 'ICRA 2027 · In Submission',
     authors: 'Devesh Nath, Glen Chou',

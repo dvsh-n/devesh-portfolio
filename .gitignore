@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Temporary full-quality video source
+src/pages/projects/micrompc/muMPC_orig.mp4

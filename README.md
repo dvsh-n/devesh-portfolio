@@ -40,3 +40,7 @@ Run `python3 scripts/build-pixels-thumbnail.py` (requires ffmpeg) to rebuild `pu
 ## Koopman Reachability thumbnail
 
 The original animation is `src/pages/projects/koopman-reachability/thumbnail.mp4`. Run `python3 scripts/build-koopman-thumbnail.py` to rebuild the public thumbnail. It removes unused black margins with a fixed crop that retains all animation elements, preserves native foreground resolution at 60 fps, and fills the 8:5 frame with the same dim, heavily blurred backdrop used for Pixels to Proofs.
+
+## μMPC thumbnail
+
+Run `python3 scripts/build-micrompc-thumbnail.py` to frame `src/pages/projects/micrompc/experiments.mp4` as `public/projects/micrompc/assets/thumbnail.mp4`. The experiments clip covers 2:06–3:12 of the original (skipping the first 11 seconds of the experiments section), cropped to 3232 × 1740. The silent loop preserves the cropped clip at native resolution and 30 fps, with the shared dim blurred background filling the fixed 8:5 frame.
