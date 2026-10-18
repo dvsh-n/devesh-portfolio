@@ -30,8 +30,8 @@ import AsciiBackground from '../components/AsciiBackground.astro';
           <p>Trustworthy Robotics Lab</p>
           <p><a class="email" href="mailto:dnath7@gatech.edu">dnath7 [AT] gatech.edu</a></p>
           <nav class="social-links" aria-label="Contact and profiles">
-            <a href="/Resume.pdf" target="_blank" rel="noopener noreferrer" aria-label="Open résumé" title="Open résumé">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5" /></svg>
+            <a href="/Resume.pdf" target="_blank" rel="noopener noreferrer" aria-label="Open CV" title="Open CV">
+              <span>CV</span>
             </a>
             <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/deveshnath" aria-label="LinkedIn" title="LinkedIn">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5.2 3a2.2 2.2 0 1 0 0 4.4 2.2 2.2 0 0 0 0-4.4ZM3.4 9h3.6v12H3.4V9Zm6 0h3.4v1.6h.1c.5-1 1.7-1.9 3.5-1.9 3.7 0 4.4 2.4 4.4 5.6V21h-3.6v-6c0-1.4 0-3.2-2-3.2s-2.3 1.5-2.3 3.1V21H9.4V9Z" /></svg>
@@ -246,7 +246,7 @@ import AsciiBackground from '../components/AsciiBackground.astro';
   .social-links a { display: inline-flex; padding: 3px 0; color: var(--ink); }
   .social-links a:hover { color: var(--orange); }
   .social-links svg { width: 22px; height: 22px; }
-  .section-nav { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 35px; min-height: 65px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: #151515; margin-bottom: 0; }
+  .section-nav { position: relative; z-index: 5; display: flex; align-items: center; gap: 35px; min-height: 65px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: transparent; margin-bottom: 0; }
   .section-nav a { display: flex; align-items: center; min-height: 64px; position: relative; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--ink); }
   .section-nav a::after { content: ''; position: absolute; height: 2px; bottom: 17px; left: 0; width: 100%; background: var(--nav-accent); transform: scaleX(0); transition: transform .15s ease; }
   .section-nav a[href="#about"] { --nav-accent: var(--orange); }
