@@ -43,4 +43,6 @@ The original animation is `src/pages/projects/koopman-reachability/thumbnail.mp4
 
 ## μMPC thumbnail
 
-Run `python3 scripts/build-micrompc-thumbnail.py` to frame `src/pages/projects/micrompc/experiments.mp4` as `public/projects/micrompc/assets/thumbnail.mp4`. The experiments clip covers 2:06–3:12 of the original (skipping the first 11 seconds of the experiments section), cropped to 3232 × 1740. The silent loop preserves the cropped clip at native resolution and 30 fps, with the shared dim blurred background filling the fixed 8:5 frame.
+Run `python3 scripts/build-micrompc-thumbnail.py` to frame `src/pages/projects/micrompc/experiments.mp4` as `public/projects/micrompc/assets/thumbnail.mp4`. The experiments clip covers 2:06–3:12 of the original (skipping the first 11 seconds of the experiments section), cropped to 3232 × 1740. The clip and thumbnail play at 2× speed (about 33 seconds, 60 fps), retaining every original video frame with high-quality encoding. The silent loop preserves the cropped clip at native resolution, with the shared dim blurred background filling the fixed 8:5 frame.
+
+To rebuild the edited experiments clip from the temporary original, run `python3 scripts/build-micrompc-experiments.py` before rebuilding the thumbnail. The rope and hardware cube comparisons are enlarged; the cube caption is replaced with the generated asset in `src/pages/projects/micrompc/assets/`. Its generation prompt is saved beside it.
