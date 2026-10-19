@@ -7,9 +7,9 @@
   if (canvas && context) {
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const glyphs = '.:;-=+*#%@';
-    const cellWidth = 6;
-    const cellHeight = 8;
-    const fontSize = 7;
+    const cellWidth = 8;
+    const cellHeight = 11;
+    const fontSize = 9;
     const frameInterval = 1000 / 15;
     const hiddenMessage = 'Wuvu Daby Dirl';
     let width = 0;
@@ -101,7 +101,7 @@
             tileWidth, tileHeight, x, y, cellWidth, cellHeight);
           if (isMessage) {
             context.globalAlpha = 1;
-            context.font = `${fontSize}px ui-monospace, Menlo, Consolas, monospace`;
+            context.font = '7px ui-monospace, Menlo, Consolas, monospace';
             context.textAlign = 'center';
             context.textBaseline = 'middle';
             context.fillStyle = 'rgba(154, 166, 171, 0.21)';
