@@ -4,6 +4,13 @@ import videoUrl from './muMPC_full.mp4?url';
 import rolloutUrl from './method_videos/01-latent-rollout.mp4?url';
 import programUrl from './method_videos/02-condensed-program.mp4?url';
 import solverUrl from './method_videos/03-primal-dual-solver.mp4?url';
+import robotariumUrl from './result_videos/robotarium_clipped_2x.mp4?url';
+import swarmUrl from './result_videos/noref_plan_ibr_ego_left_to_right_2x.mp4?url';
+import quadrupedNomUrl from './result_videos/go2_nom_side.mp4?url';
+import quadrupedObsUrl from './result_videos/go2_obs_top_down.mp4?url';
+import crazyflieUrl from './result_videos/cf_mpc_2x2.mp4?url';
+import cubeUrl from './result_videos/cube_real_diffqp_comparison.mp4?url';
+import ropeUrl from './result_videos/rope_mpc_2x2.mp4?url';
 const methodSteps = [
   { title: 'Precompute the latent rollout', url: rolloutUrl },
   { title: 'Condense the quadratic program', url: programUrl },
@@ -62,16 +69,80 @@ const subtitle = 'Safe Nonlinear and World Model Control in Microseconds via Koo
           <div id="method-slides">
             {methodSteps.map((step, index) => (
               <figure class="method-card" hidden={index !== 0} role="group" aria-roledescription="slide" aria-label={`${index + 1} of 3: ${step.title}`}>
+                <figcaption><span class="method-number">{index + 1} / {methodSteps.length}</span><span>{step.title}</span></figcaption>
                 <video muted playsinline preload="auto" aria-label={step.title}>
                   <source src={step.url} type="video/mp4" />
                 </video>
-                <figcaption><span class="method-number">{index + 1} / {methodSteps.length}</span>{step.title}</figcaption>
               </figure>
             ))}
           </div>
           <button class="method-arrow next" type="button" aria-label="Next method step" aria-controls="method-slides">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6" /></svg>
           </button>
+        </div>
+      </section>
+      <section class="results" aria-labelledby="results-title">
+        <h2 id="results-title">Results</h2>
+        <figure>
+          <figcaption><span class="result-number">1 / 5</span><span>Microsecond control. Sub-millisecond world models. 200 agents at 30 Hz.</span></figcaption>
+          <img src="/projects/micrompc/assets/results.svg" width="1790" height="713" loading="lazy" alt="Benchmark comparisons of solve times and success rates for quadruped control, linear world models, and 3D quadcopters. μMPC achieves 0.725 ms on bimanual rope planning, 0.427 ms on Reacher, 0.058 ms on CPU quadcopter control, and 32.118 ms for 200 quadcopters." />
+        </figure>
+        <div class="multi-agent-result">
+          <p class="result-summary"><span class="result-number">2 / 5</span><span>Fast, Scalable Multi-Agent Planning</span></p>
+          <div class="result-video-pair">
+            <figure>
+              <video muted playsinline loop preload="metadata" aria-label="Seven differential drive robots planning together">
+                <source src={robotariumUrl} type="video/mp4" />
+              </video>
+              <figcaption>7 physical differential drive robots</figcaption>
+            </figure>
+            <figure>
+              <video muted playsinline loop preload="metadata" aria-label="Collision free planning with 150 quadcopters">
+                <source src={swarmUrl} type="video/mp4" />
+              </video>
+              <figcaption>Collision free planning with 150 Quadcopters</figcaption>
+            </figure>
+          </div>
+        </div>
+        <div class="crazyflie-result">
+          <p class="result-summary"><span class="result-number">3 / 5</span><span>Long Horizon (H=75) planning onboard the crazyflie MCU in 24.57 ms</span></p>
+          <video muted playsinline loop preload="metadata" aria-label="Long horizon onboard planning on the Crazyflie microcontroller">
+            <source src={crazyflieUrl} type="video/mp4" />
+          </video>
+        </div>
+        <div class="multi-agent-result">
+          <p class="result-summary"><span class="result-number">4 / 5</span><span>Quadruped Planning</span></p>
+          <div class="result-video-pair">
+            <figure>
+              <video class="quadruped-nominal" muted playsinline loop preload="metadata" aria-label="Quadruped planning with a 4096-dimensional Koopman model">
+                <source src={quadrupedNomUrl} type="video/mp4" />
+              </video>
+              <figcaption>4096D Koopman planning in 4.47 ms</figcaption>
+            </figure>
+            <figure>
+              <video class="quadruped-obstacle" muted playsinline loop preload="metadata" aria-label="Quadruped whole-body safety filtering with a 100-step horizon">
+                <source src={quadrupedObsUrl} type="video/mp4" />
+              </video>
+              <figcaption>Whole-body safety filtering with horizon 100 in 28.18 ms</figcaption>
+            </figure>
+          </div>
+        </div>
+        <div class="multi-agent-result">
+          <p class="result-summary"><span class="result-number">5 / 5</span><span>2048D Linear World Models</span></p>
+          <div class="result-video-pair">
+            <figure>
+              <video class="world-model-video" muted playsinline loop preload="metadata" aria-label="Hardware cube manipulation with a model trained using DiffQP">
+                <source src={cubeUrl} type="video/mp4" />
+              </video>
+              <figcaption>Differentiable QP supervision recovers the needed vertical control authority</figcaption>
+            </figure>
+            <figure>
+              <video class="world-model-video" muted playsinline loop preload="metadata" aria-label="Bimanual rope manipulation with a linear world model">
+                <source src={ropeUrl} type="video/mp4" />
+              </video>
+              <figcaption>Bimanual rope manipulation in 0.725 ms</figcaption>
+            </figure>
+          </div>
         </div>
       </section>
     </main>
@@ -90,9 +161,17 @@ const subtitle = 'Safe Nonlinear and World Model Control in Microseconds via Koo
       const next = carousel.querySelector<HTMLButtonElement>('.next')!;
       let active = 0;
       let visible = false;
+      const finished = new WeakSet<HTMLVideoElement>();
+      document.querySelectorAll<HTMLVideoElement>('#video video, .method-card video').forEach((video) => {
+        video.loop = false;
+        video.addEventListener('ended', () => {
+          finished.add(video);
+          video.pause();
+        });
+      });
       const updatePlayback = () => cards.forEach((card, index) => {
         const video = card.querySelector('video')!;
-        if (index === active && visible && !video.ended) video.play().catch(() => {});
+        if (index === active && visible && !finished.has(video) && !video.ended) video.play().catch(() => {});
         else video.pause();
       });
       const showStep = (index: number) => {
@@ -100,7 +179,11 @@ const subtitle = 'Safe Nonlinear and World Model Control in Microseconds via Koo
         active = index;
         cards.forEach((card, i) => {
           card.hidden = i !== active;
-          if (i === active) card.querySelector('video')!.currentTime = 0;
+          if (i === active) {
+            const video = card.querySelector('video')!;
+            finished.delete(video);
+            video.currentTime = 0;
+          }
         });
         previous.disabled = active === 0;
         next.disabled = active === cards.length - 1;
@@ -118,6 +201,14 @@ const subtitle = 'Safe Nonlinear and World Model Control in Microseconds via Koo
         visible = entry.isIntersecting;
         updatePlayback();
       }, { threshold: 0.25 }).observe(carousel);
+      const resultObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target as HTMLVideoElement;
+          if (entry.isIntersecting) video.play().catch(() => {});
+          else video.pause();
+        });
+      }, { threshold: 0.25 });
+      document.querySelectorAll<HTMLVideoElement>('.results video').forEach((video) => resultObserver.observe(video));
     </script>
   </body>
 </html>
@@ -128,7 +219,7 @@ const subtitle = 'Safe Nonlinear and World Model Control in Microseconds via Koo
   :global(html) { color-scheme: dark; background: #101214; min-height: 100%; }
   :global(body) { margin: 0; color: #f4f7fb; font-family: 'Lato', sans-serif; -webkit-font-smoothing: antialiased; }
   :global(*) { box-sizing: border-box; }
-  main { width: min(100% - 64px, 920px); margin: 0 auto; padding: 80px 0 72px; }
+  main { width: min(100% - 64px, 1000px); margin: 0 auto; padding: 80px 0 72px; }
   header { text-align: center; }
   h1 { display: flex; align-items: center; justify-content: center; gap: 17px; margin: 0 0 34px; font: 700 80px/1 'Lato', sans-serif; letter-spacing: -3px; }
   .subtitle { max-width: 760px; margin: 0 auto; font-size: 32px; font-weight: 400; letter-spacing: -.55px; line-height: 1.4; text-wrap: balance; }
@@ -159,15 +250,26 @@ const subtitle = 'Safe Nonlinear and World Model Control in Microseconds via Koo
   .abstract p { text-align: justify; hyphens: auto; margin-top: 0; margin-bottom: 18px; color: #b7c0c8; font-size: 18px; line-height: 1.8; }
   .method { margin-top: 48px; border-top: 1px solid #2b3035; padding-top: 40px; }
   .method h2 { text-align: center; margin: 0 0 28px; font-size: 26px; letter-spacing: -.3px; }
-  .method-carousel { display: grid; grid-template-columns: 44px minmax(0, 720px) 44px; gap: 24px; align-items: center; justify-content: center; }
+  .method-carousel { display: grid; grid-template-columns: 44px minmax(0, 800px) 44px; gap: 24px; align-items: center; justify-content: center; }
   .method-card { margin: 0; }
   .method-card[hidden] { display: none; }
-  .method-card figcaption { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 20px; font-size: 18px; line-height: 1.5; text-align: center; }
-  .method-number { color: #50d6ff; font-size: 13px; letter-spacing: 1px; }
-  .method-arrow { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid #343c43; border-radius: 50%; background: #1b2025; color: #e5ebef; cursor: pointer; margin-bottom: 47px; }
+  .method-card figcaption { display: flex; align-items: baseline; justify-content: center; gap: 12px; margin: 0 0 20px; font-size: 18px; line-height: 1.5; text-align: center; }
+  .method-number { flex-shrink: 0; color: #50d6ff; font-size: inherit; letter-spacing: normal; }
+  .method-arrow { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid #343c43; border-radius: 50%; background: #1b2025; color: #e5ebef; cursor: pointer; margin-top: 47px; }
   .method-arrow:hover:not(:disabled) { border-color: #50d6ff; color: #50d6ff; }
   .method-arrow:disabled { opacity: .25; cursor: default; }
   .method-arrow svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .results { margin-top: 48px; border-top: 1px solid #2b3035; padding-top: 40px; }
+  .results h2 { text-align: center; margin: 0 0 28px; font-size: 26px; letter-spacing: -.3px; }
+  .results figure { margin: 0; }
+  .results img { display: block; width: 100%; height: auto; }
+  .results figcaption, .result-summary { display: flex; align-items: baseline; justify-content: center; gap: 12px; max-width: 860px; margin: 22px auto 0; color: #f4f7fb; font-size: 20px; line-height: 1.6; text-align: center; text-wrap: balance; }
+  .result-number { flex-shrink: 0; color: #50d6ff; font-size: inherit; letter-spacing: normal; }
+  .multi-agent-result, .crazyflie-result { margin-top: 56px; }
+  .crazyflie-result video, .quadruped-nominal, .quadruped-obstacle, .world-model-video { background: transparent; }
+  .result-video-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  .result-video-pair figcaption { display: block; margin-top: 14px; font-size: 16px; }
+  .results > figure > figcaption, .result-summary { margin: 0 auto 24px; }
   @media (max-width: 600px) {
     main { width: calc(100% - 36px); padding: 52px 0 36px; }
     h1 { font-size: 64px; gap: 13px; margin-bottom: 28px; }
@@ -180,7 +282,13 @@ const subtitle = 'Safe Nonlinear and World Model Control in Microseconds via Koo
     .abstract p { font-size: 16px; line-height: 1.75; }
     .method { margin-top: 32px; padding-top: 28px; }
     .method-carousel { grid-template-columns: 32px minmax(0, 1fr) 32px; gap: 8px; }
-    .method-arrow { width: 32px; height: 32px; margin-bottom: 60px; }
-    .method-card figcaption { font-size: 14px; gap: 8px; margin-top: 14px; min-height: 42px; }
+    .method-arrow { width: 32px; height: 32px; margin-top: 56px; }
+    .method-card figcaption { font-size: 14px; gap: 8px; margin: 0 0 14px; min-height: 42px; }
+    .results { margin-top: 32px; padding-top: 28px; }
+    .results figcaption, .result-summary { margin-top: 18px; font-size: 17px; }
+    .multi-agent-result, .crazyflie-result { margin-top: 36px; }
+    .result-video-pair { grid-template-columns: 1fr; gap: 28px; }
+    .result-video-pair figcaption { margin-top: 12px; font-size: 15px; }
+    .results > figure > figcaption, .result-summary { margin: 0 auto 20px; }
   }
 </style>
