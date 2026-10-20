@@ -1,6 +1,15 @@
 ---
-import { publications } from '../../../data/publications';
-const project = publications.find((paper) => paper.slug === 'micrompc')!;
+import MuMpcLogo from '../../../components/MuMpcLogo.astro';
+import videoUrl from './muMPC_full.mp4?url';
+import rolloutUrl from './method_videos/01-latent-rollout.mp4?url';
+import programUrl from './method_videos/02-condensed-program.mp4?url';
+import solverUrl from './method_videos/03-primal-dual-solver.mp4?url';
+const methodSteps = [
+  { title: 'Precompute the latent rollout', url: rolloutUrl },
+  { title: 'Condense the quadratic program', url: programUrl },
+  { title: 'Solve with a frozen inverse', url: solverUrl },
+];
+const subtitle = 'Safe Nonlinear and World Model Control in Microseconds via Koopman-Linearized Pre-Compilation';
 ---
 
 <!doctype html>
@@ -9,16 +18,169 @@ const project = publications.find((paper) => paper.slug === 'micrompc')!;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#151515" />
+    <meta name="description" content={subtitle} />
     <meta name="robots" content="noindex" />
-    <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg?v=4" />
-    <title>{project.title} · Devesh Nath</title>
+    <link rel="icon" type="image/svg+xml" sizes="any" href="/projects/micrompc/favicon.svg" />
+    <title>μMPC</title>
   </head>
   <body>
-    <!-- Blank project page, ready for project content. -->
+    <main>
+      <header>
+        <h1><MuMpcLogo /></h1>
+        <p class="subtitle">Safe Nonlinear and World Model Control in <span class="highlight">Microseconds</span> via Koopman-Linearized Pre-Compilation</p>
+        <p class="authors"><a href="/">Devesh Nath</a><span aria-hidden="true">·</span><span>Glen Chou</span></p>
+        <nav aria-label="Project resources">
+          {[
+            { label: 'Paper', path: 'M14 3H6v18h12V7l-4-4Z M14 3v5h4 M9 12h6 M9 16h6' },
+            { label: 'Code', path: 'm8 7-5 5 5 5 M16 7l5 5-5 5 M14 4l-4 16' },
+            { label: 'Video', path: 'm8 5 11 7-11 7V5Z' },
+          ].map(({ label, path }) => (
+            <button type="button" aria-disabled="true" aria-label={`${label}: Coming Soon!`}>
+              <span class="resource-label" aria-hidden="true"><svg viewBox="0 0 24 24"><path d={path} /></svg><span>{label}</span></span>
+              <span class="soon" aria-hidden="true">Coming Soon!</span>
+            </button>
+          ))}
+        </nav>
+      </header>
+      <section id="video" aria-label="μMPC full presentation">
+        <video controls autoplay muted playsinline preload="auto" aria-label="μMPC full presentation video">
+          <source src={videoUrl} type="video/mp4" />
+          Your browser does not support embedded video. <a href={videoUrl}>Download the video</a>.
+        </video>
+      </section>
+      <section class="abstract" aria-labelledby="abstract-title">
+        <h2 id="abstract-title">Abstract</h2>
+        <p>Expressive models. Microsecond planning. <MuMpcLogo /> precompiles learned Koopman dynamics into a compact, action-only optimization problem whose size is independent of the lifted state dimension. Expensive matrix operations move offline; online control uses matrix–vector products and projections, adapting to new goals and constraints without refactorization.</p>
+        <p><MuMpcLogo /> reduces planning latency by one to over two orders of magnitude across benchmarks, enabling sub-millisecond visual world model planning, 4096-dimensional quadruped control in under 5 ms, and collision-aware planning for 200 quadrotors at over 30 Hz. The same framework runs onboard a Crazyflie microcontroller, bringing efficient predictive control from embedded robots to high-dimensional learned models.</p>
+      </section>
+      <section class="method" aria-labelledby="method-title">
+        <h2 id="method-title">Method</h2>
+        <div class="method-carousel" role="region" aria-roledescription="carousel" aria-label="Method breakdown" tabindex="0">
+          <button class="method-arrow previous" type="button" aria-label="Previous method step" aria-controls="method-slides" disabled>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6" /></svg>
+          </button>
+          <div id="method-slides">
+            {methodSteps.map((step, index) => (
+              <figure class="method-card" hidden={index !== 0} role="group" aria-roledescription="slide" aria-label={`${index + 1} of 3: ${step.title}`}>
+                <video muted playsinline preload="auto" aria-label={step.title}>
+                  <source src={step.url} type="video/mp4" />
+                </video>
+                <figcaption><span class="method-number">{index + 1} / {methodSteps.length}</span>{step.title}</figcaption>
+              </figure>
+            ))}
+          </div>
+          <button class="method-arrow next" type="button" aria-label="Next method step" aria-controls="method-slides">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6" /></svg>
+          </button>
+        </div>
+      </section>
+    </main>
+    <script>
+      document.querySelectorAll<HTMLButtonElement>('nav button').forEach((button) => {
+        let resetTimer: ReturnType<typeof setTimeout>;
+        button.addEventListener('click', () => {
+          clearTimeout(resetTimer);
+          button.classList.add('show-soon');
+          resetTimer = setTimeout(() => button.classList.remove('show-soon'), 1500);
+        });
+      });
+      const carousel = document.querySelector<HTMLElement>('.method-carousel')!;
+      const cards = [...carousel.querySelectorAll<HTMLElement>('.method-card')];
+      const previous = carousel.querySelector<HTMLButtonElement>('.previous')!;
+      const next = carousel.querySelector<HTMLButtonElement>('.next')!;
+      let active = 0;
+      let visible = false;
+      const updatePlayback = () => cards.forEach((card, index) => {
+        const video = card.querySelector('video')!;
+        if (index === active && visible && !video.ended) video.play().catch(() => {});
+        else video.pause();
+      });
+      const showStep = (index: number) => {
+        if (index < 0 || index >= cards.length) return;
+        active = index;
+        cards.forEach((card, i) => {
+          card.hidden = i !== active;
+          if (i === active) card.querySelector('video')!.currentTime = 0;
+        });
+        previous.disabled = active === 0;
+        next.disabled = active === cards.length - 1;
+        updatePlayback();
+      };
+      previous.addEventListener('click', () => showStep(active - 1));
+      next.addEventListener('click', () => showStep(active + 1));
+      carousel.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+          event.preventDefault();
+          showStep(active + (event.key === 'ArrowLeft' ? -1 : 1));
+        }
+      });
+      new IntersectionObserver(([entry]) => {
+        visible = entry.isIntersecting;
+        updatePlayback();
+      }, { threshold: 0.25 }).observe(carousel);
+    </script>
   </body>
 </html>
 
-<style is:global>
-  html { color-scheme: dark; background: #151515; min-height: 100%; }
-  body { margin: 0; }
+<style>
+  @font-face { font-family: 'Lato'; src: url('/fonts/Lato-Regular.ttf') format('truetype'); font-style: normal; font-weight: 400; font-display: swap; }
+  @font-face { font-family: 'Lato'; src: url('/fonts/Lato-Bold.ttf') format('truetype'); font-style: normal; font-weight: 700; font-display: swap; }
+  :global(html) { color-scheme: dark; background: #101214; min-height: 100%; }
+  :global(body) { margin: 0; color: #f4f7fb; font-family: 'Lato', sans-serif; -webkit-font-smoothing: antialiased; }
+  :global(*) { box-sizing: border-box; }
+  main { width: min(100% - 64px, 920px); margin: 0 auto; padding: 80px 0 72px; }
+  header { text-align: center; }
+  h1 { display: flex; align-items: center; justify-content: center; gap: 17px; margin: 0 0 34px; font: 700 80px/1 'Lato', sans-serif; letter-spacing: -3px; }
+  .subtitle { max-width: 760px; margin: 0 auto; font-size: 32px; font-weight: 400; letter-spacing: -.55px; line-height: 1.4; text-wrap: balance; }
+  .highlight { color: #50d6ff; }
+  .authors { display: flex; align-items: center; justify-content: center; gap: 15px; margin: 24px 0 0; color: #b7c0c8; font-size: 17px; line-height: 1.6; }
+  .authors a { color: inherit; text-decoration: none; }
+  .authors a:hover { color: #50d6ff; }
+  .authors > span[aria-hidden] { color: #55616c; }
+  nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin: 29px 0 48px; }
+  nav button { position: relative; isolation: isolate; overflow: hidden; display: inline-grid; place-items: center; width: 112px; height: 42px; padding: 0; flex: 0 0 112px; border: 1px solid #343c43; border-radius: 24px; background: #1b2025; color: #e5ebef; font: 700 14px/1.4 'Lato', sans-serif; cursor: default; transition: border-color .3s; }
+  nav button::before { content: ''; position: absolute; inset: 0; z-index: -1; background: #d3f3fc; transform: translateY(101%); transition: transform .3s cubic-bezier(.22, 1, .36, 1); }
+  nav button > span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: opacity .2s, transform .3s; }
+  nav button .resource-label { display: grid; grid-template-columns: 16px 38px; align-content: center; justify-content: center; align-items: center; gap: 8px; line-height: 16px; }
+  .resource-label > span { display: block; text-align: left; }
+  nav button .soon { opacity: 0; transform: translateY(8px); color: #12252c; font-size: 11px; letter-spacing: .3px; white-space: nowrap; }
+  nav button:is(:hover, :focus-visible, .show-soon) { border-color: #d3f3fc; }
+  nav button:is(:hover, :focus-visible, .show-soon)::before { transform: translateY(0); }
+  nav button:is(:hover, :focus-visible, .show-soon) .resource-label { opacity: 0; transform: translateY(-8px); }
+  nav button:is(:hover, :focus-visible, .show-soon) .soon { opacity: 1; transform: translateY(0); }
+  :is(a, button):focus-visible { outline: 2px solid #50d6ff; outline-offset: 5px; }
+  nav svg { display: block; width: 16px; height: 16px; flex: 0 0 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  @media (prefers-reduced-motion: reduce) { nav button, nav button::before, .resource-label, .soon { transition: none; } }
+  #video { scroll-margin-top: 24px; border-top: 1px solid #2b3035; padding-top: 40px; }
+  video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #000; }
+  .abstract { margin: 48px auto 0; border-top: 1px solid #2b3035; padding-top: 40px; }
+  .abstract > p { max-width: 760px; margin-left: auto; margin-right: auto; }
+  .abstract h2 { text-align: center; margin: 0 0 22px; font-size: 26px; font-weight: 700; letter-spacing: -.3px; }
+  .abstract p { text-align: justify; hyphens: auto; margin-top: 0; margin-bottom: 18px; color: #b7c0c8; font-size: 18px; line-height: 1.8; }
+  .method { margin-top: 48px; border-top: 1px solid #2b3035; padding-top: 40px; }
+  .method h2 { text-align: center; margin: 0 0 28px; font-size: 26px; letter-spacing: -.3px; }
+  .method-carousel { display: grid; grid-template-columns: 44px minmax(0, 720px) 44px; gap: 24px; align-items: center; justify-content: center; }
+  .method-card { margin: 0; }
+  .method-card[hidden] { display: none; }
+  .method-card figcaption { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 20px; font-size: 18px; line-height: 1.5; text-align: center; }
+  .method-number { color: #50d6ff; font-size: 13px; letter-spacing: 1px; }
+  .method-arrow { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid #343c43; border-radius: 50%; background: #1b2025; color: #e5ebef; cursor: pointer; margin-bottom: 47px; }
+  .method-arrow:hover:not(:disabled) { border-color: #50d6ff; color: #50d6ff; }
+  .method-arrow:disabled { opacity: .25; cursor: default; }
+  .method-arrow svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  @media (max-width: 600px) {
+    main { width: calc(100% - 36px); padding: 52px 0 36px; }
+    h1 { font-size: 64px; gap: 13px; margin-bottom: 28px; }
+    .subtitle { font-size: 25px; letter-spacing: -.35px; line-height: 1.4; }
+    .authors { margin-top: 23px; font-size: 16px; gap: 12px; }
+    nav { gap: 8px; margin: 25px 0 34px; }
+    nav button { width: 94px; flex-basis: 94px; }
+    #video { padding-top: 28px; }
+    .abstract { margin-top: 32px; padding-top: 28px; }
+    .abstract p { font-size: 16px; line-height: 1.75; }
+    .method { margin-top: 32px; padding-top: 28px; }
+    .method-carousel { grid-template-columns: 32px minmax(0, 1fr) 32px; gap: 8px; }
+    .method-arrow { width: 32px; height: 32px; margin-bottom: 60px; }
+    .method-card figcaption { font-size: 14px; gap: 8px; margin-top: 14px; min-height: 42px; }
+  }
 </style>

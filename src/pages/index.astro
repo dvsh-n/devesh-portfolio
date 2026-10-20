@@ -197,8 +197,24 @@ import AsciiBackground from '../components/AsciiBackground.astro';
             ]);
           });
         };
-        paper.addEventListener('pointerenter', () => setExpanded(true));
-        paper.addEventListener('pointerleave', () => setExpanded(false));
+        let collapseTimer: ReturnType<typeof setTimeout> | undefined;
+        const cancelCollapse = () => {
+          clearTimeout(collapseTimer);
+          collapseTimer = undefined;
+        };
+        figure.addEventListener('pointerenter', () => {
+          cancelCollapse();
+          setExpanded(true);
+        });
+        // The image moves during expansion; keep the whole card as the hover area.
+        paper.addEventListener('pointerenter', cancelCollapse);
+        paper.addEventListener('pointerleave', () => {
+          cancelCollapse();
+          collapseTimer = setTimeout(() => {
+            collapseTimer = undefined;
+            if (!paper.matches(':hover')) setExpanded(false);
+          }, 200);
+        });
         desktopHover.addEventListener('change', measure);
         new ResizeObserver(measure).observe(paper);
         figure.querySelector('img')?.addEventListener('load', () => {
