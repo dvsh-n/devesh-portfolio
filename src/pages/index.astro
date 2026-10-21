@@ -1,6 +1,24 @@
 ---
 import { publications } from '../data/publications';
 import AsciiBackground from '../components/AsciiBackground.astro';
+import MuMpcLogo from '../components/MuMpcLogo.astro';
+import FactorizedConformalLogo from '../components/FactorizedConformalLogo.astro';
+const seoTitle = 'Devesh Nath | Robotics PhD Student at Georgia Tech';
+const seoDescription = 'Devesh Nath is a Robotics PhD student at Georgia Tech researching safe robot control, learned world models, and scalable planning with statistical safety guarantees.';
+const siteUrl = 'https://www.deveshnath.com/';
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'WebSite', '@id': `${siteUrl}#website`, url: siteUrl, name: 'Devesh Nath' },
+    {
+      '@type': 'Person', '@id': `${siteUrl}#person`, name: 'Devesh Nath', url: siteUrl,
+      image: `${siteUrl}images/me.jpeg`, description: seoDescription,
+      jobTitle: 'Robotics PhD Student',
+      affiliation: { '@type': 'CollegeOrUniversity', name: 'Georgia Institute of Technology', url: 'https://www.gatech.edu/' },
+      sameAs: ['https://www.linkedin.com/in/deveshnath', 'https://github.com/dvsh-n'],
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -9,12 +27,24 @@ import AsciiBackground from '../components/AsciiBackground.astro';
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#151515" />
-    <meta name="description" content="Devesh Nath — Robotics PhD student at Georgia Tech, working on safe robot control, learned world models, and statistical safety guarantees." />
+    <meta name="description" content={seoDescription} />
+    <link rel="canonical" href={siteUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Devesh Nath" />
+    <meta property="og:title" content={seoTitle} />
+    <meta property="og:description" content={seoDescription} />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:image" content={`${siteUrl}images/me.jpeg`} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={seoTitle} />
+    <meta name="twitter:description" content={seoDescription} />
+    <meta name="twitter:image" content={`${siteUrl}images/me.jpeg`} />
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
     <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg?v=4" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
-    <title>Devesh Nath</title>
+    <title>{seoTitle}</title>
   </head>
   <body>
     <AsciiBackground />
@@ -88,7 +118,7 @@ import AsciiBackground from '../components/AsciiBackground.astro';
                   )}
                 </div>
                 <div class="paper-content">
-                  <h4 id={`${paper.slug}-title`}>{paper.title}</h4>
+                  <h4 id={`${paper.slug}-title`}>{paper.slug === 'micrompc' ? <><MuMpcLogo />{paper.title.replace(/^μMPC/, '')}</> : paper.slug === 'adaptive-conformal-prediction' ? <><FactorizedConformalLogo />{paper.title.replace(/^Factorized Conformal Prediction/, '')}</> : paper.title}</h4>
                   <p class="authors">{paper.authors.split('Devesh Nath').map((part, index) => <>{index > 0 && <strong>Devesh Nath</strong>}{part}</>)}</p>
                   <p class="venue">{paper.venue}{paper.distinction && <> · <span class="distinction">{paper.distinction}</span></>}</p>
                   <div class="paper-buttons">
@@ -238,6 +268,7 @@ import AsciiBackground from '../components/AsciiBackground.astro';
 </html>
 
 <style>
+  @font-face { font-family: 'Lato'; src: url('/fonts/Lato-Bold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
   :global(*) { box-sizing: border-box; }
   :global(html) {
     color-scheme: dark;
