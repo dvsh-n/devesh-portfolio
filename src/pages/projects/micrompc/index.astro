@@ -93,11 +93,11 @@ const subtitle = 'Safe Nonlinear and World Model Control in Microseconds via Koo
           <div class="result-video-pair">
             <figure>
               <video muted playsinline loop preload="metadata" aria-label="7 physical differential drive robots"><source src={robotariumUrl} type="video/mp4" /></video>
-              <figcaption>7 physical differential drive robots</figcaption>
+              <figcaption><span class="experiment-letter">A.</span> 7 physical differential drive robots</figcaption>
             </figure>
             <figure>
               <video muted playsinline loop preload="metadata" aria-label="Collision free planning with 150 Quadcopters"><source src={swarmUrl} type="video/mp4" /></video>
-              <figcaption>Collision free planning with 150 Quadcopters</figcaption>
+              <figcaption><span class="experiment-letter">B.</span> Collision free planning with 150 Quadcopters</figcaption>
             </figure>
           </div>
         </div>
@@ -110,11 +110,11 @@ const subtitle = 'Safe Nonlinear and World Model Control in Microseconds via Koo
           <div class="result-video-pair">
             <figure>
               <video class="quadruped-nominal" muted playsinline loop preload="metadata" aria-label="4096D Koopman planning in 4.47 ms"><source src={quadrupedNomUrl} type="video/mp4" /></video>
-              <figcaption>4096D Koopman planning in 4.47 ms</figcaption>
+              <figcaption><span class="experiment-letter">A.</span> 4096D Koopman planning in 4.47 ms</figcaption>
             </figure>
             <figure>
               <video class="quadruped-obstacle" muted playsinline loop preload="metadata" aria-label="Whole-body safety filtering with horizon 100 in 28.18 ms"><source src={quadrupedObsUrl} type="video/mp4" /></video>
-              <figcaption>Whole-body safety filtering with horizon 100 in 28.18 ms</figcaption>
+              <figcaption><span class="experiment-letter">B.</span> Whole-body safety filtering with horizon 100 in 28.18 ms</figcaption>
             </figure>
           </div>
         </div>
@@ -123,11 +123,11 @@ const subtitle = 'Safe Nonlinear and World Model Control in Microseconds via Koo
           <div class="result-video-pair">
             <figure>
               <video class="world-model-video" muted playsinline loop preload="metadata" aria-label="Differentiable QP supervision recovers the needed vertical control authority"><source src={cubeUrl} type="video/mp4" /></video>
-              <figcaption>Differentiable QP supervision recovers the needed vertical control authority</figcaption>
+              <figcaption><span class="experiment-letter">A.</span> Differentiable QP supervision recovers the needed vertical control authority</figcaption>
             </figure>
             <figure>
               <video class="world-model-video" muted playsinline loop preload="metadata" aria-label="Bimanual rope manipulation in 0.725 ms"><source src={ropeUrl} type="video/mp4" /></video>
-              <figcaption>Bimanual rope manipulation in 0.725 ms</figcaption>
+              <figcaption><span class="experiment-letter">B.</span> Bimanual rope manipulation in 0.725 ms</figcaption>
             </figure>
           </div>
         </div>
@@ -280,6 +280,7 @@ const subtitle = 'Safe Nonlinear and World Model Control in Microseconds via Koo
   .multi-agent-result, .crazyflie-result { margin-top: 48px; }
   .crazyflie-result video, .quadruped-nominal, .quadruped-obstacle, .world-model-video { background: transparent; }
   .result-video-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  .experiment-letter { color: #50d6ff; margin-right: 6px; }
   .result-video-pair figcaption { display: block; margin-top: 14px; font-size: 16px; }
   .results > figure > figcaption, .result-summary { margin: 0 auto 24px; }
   .citation { margin-top: 48px; padding-top: 40px; }
