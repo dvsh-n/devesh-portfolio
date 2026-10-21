@@ -92,9 +92,9 @@ import AsciiBackground from '../components/AsciiBackground.astro';
                   <p class="authors">{paper.authors.split('Devesh Nath').map((part, index) => <>{index > 0 && <strong>Devesh Nath</strong>}{part}</>)}</p>
                   <p class="venue">{paper.venue}{paper.distinction && <> · <span class="distinction">{paper.distinction}</span></>}</p>
                   <div class="paper-buttons">
-                    <a class="button" target="_blank" rel="noopener noreferrer" href={paper.paperUrl} data-placeholder={paper.paperUrl === '#' ? '' : undefined} title={paper.paperUrl === '#' ? 'Paper link coming soon' : 'Read the paper'} aria-label={`Paper: ${paper.title}${paper.paperUrl === '#' ? ' (link coming soon)' : ''}`}>Paper</a>
-                    <a class="button" target="_blank" rel="noopener noreferrer" href={paper.websiteUrl ?? `/projects/${paper.slug}/`} aria-label={`Project website: ${paper.title}`}>Website</a>
-                    <a class="button" target="_blank" rel="noopener noreferrer" href={paper.videoUrl} data-placeholder={paper.videoUrl === '#' ? '' : undefined} title={paper.videoUrl === '#' ? 'Video link coming soon' : 'Watch the video'} aria-label={`Video: ${paper.title}${paper.videoUrl === '#' ? ' (link coming soon)' : ''}`}>Video</a>
+                    <a class="button" target="_blank" rel="noopener noreferrer" href={paper.paperUrl} data-placeholder={paper.paperUrl === '#' ? '' : undefined} title={paper.paperUrl === '#' ? 'Paper link coming soon' : 'Read the paper'} aria-label={`Paper: ${paper.title}${paper.paperUrl === '#' ? ' (link coming soon)' : ''}`}><span class="button-label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H6v18h12V7l-4-4Z M14 3v5h4 M9 12h6 M9 16h6" /></svg><span>Paper</span></span><span class="button-soon" aria-hidden="true">Coming Soon!</span></a>
+                    <a class="button" target="_blank" rel="noopener noreferrer" href={paper.websiteUrl ?? `/projects/${paper.slug}/`} aria-label={`Project website: ${paper.title}`}><span class="button-label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z M3 12h18 M12 3c4 5 4 13 0 18 M12 3c-4 5-4 13 0 18" /></svg><span>Website</span></span><span class="button-soon" aria-hidden="true">Coming Soon!</span></a>
+                    <a class="button" target="_blank" rel="noopener noreferrer" href={paper.videoUrl} data-placeholder={paper.videoUrl === '#' ? '' : undefined} title={paper.videoUrl === '#' ? 'Video link coming soon' : 'Watch the video'} aria-label={`Video: ${paper.title}${paper.videoUrl === '#' ? ' (link coming soon)' : ''}`}><span class="button-label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7V5Z" /></svg><span>Video</span></span><span class="button-soon" aria-hidden="true">Coming Soon!</span></a>
                   </div>
                 </div>
               </article>
@@ -107,7 +107,13 @@ import AsciiBackground from '../components/AsciiBackground.astro';
     <script>
       // Placeholder links remain on the current publication until real URLs are added.
       document.querySelectorAll<HTMLAnchorElement>('a[data-placeholder]').forEach((link) => {
-        link.addEventListener('click', (event) => event.preventDefault());
+        let resetTimer: ReturnType<typeof setTimeout>;
+        link.addEventListener('click', (event) => {
+          event.preventDefault();
+          clearTimeout(resetTimer);
+          link.classList.add('show-soon');
+          resetTimer = setTimeout(() => link.classList.remove('show-soon'), 1500);
+        });
       });
 
       const desktopHover = window.matchMedia('(min-width: 750px) and (hover: hover) and (pointer: fine)');
@@ -235,7 +241,7 @@ import AsciiBackground from '../components/AsciiBackground.astro';
   :global(*) { box-sizing: border-box; }
   :global(html) {
     color-scheme: dark;
-    background: #151515;
+    background: #0a0a0a;
     --panel: #1c1c1d;
     --ink: #dededc;
     --muted: #a4a3a2;
@@ -259,9 +265,10 @@ import AsciiBackground from '../components/AsciiBackground.astro';
   .intro p { font-size: 13px; line-height: 1.75; color: var(--muted); }
   .email { color: inherit; font-weight: 400; }
   .social-links { display: flex; gap: 13px; align-items: center; margin-top: 9px; }
-  .social-links a { display: inline-flex; padding: 3px 0; color: var(--ink); }
+  .social-links a { display: inline-flex; justify-content: center; width: 22px; padding: 3px 0; color: var(--ink); }
   .social-links a:hover { color: var(--orange); }
   .social-links svg { width: 22px; height: 22px; }
+  .social-links a > span { line-height: 22px; transform: translateY(2px); }
   .section-nav { position: relative; z-index: 5; display: flex; align-items: center; gap: 35px; min-height: 65px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: transparent; margin-bottom: 0; }
   .section-nav a { display: flex; align-items: center; min-height: 64px; position: relative; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--ink); }
   .section-nav a::after { content: ''; position: absolute; height: 2px; bottom: 17px; left: 0; width: 100%; background: var(--nav-accent); transform: scaleX(0); transition: transform .15s ease; }
@@ -294,8 +301,17 @@ import AsciiBackground from '../components/AsciiBackground.astro';
   .venue { color: var(--teal); font-size: 13px; font-style: italic; line-height: 1.7; }
   .distinction { color: #ef8585; }
   .paper-buttons { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
-  .button { display: inline-flex; align-items: center; justify-content: center; min-height: 26px; padding: 2px 12px; border: 1px solid #a6a5a2; border-radius: 3px; color: var(--ink); font-size: 11px; font-weight: 500; line-height: 20px; text-transform: uppercase; letter-spacing: 1px; transition: color .15s ease, background .15s ease, border-color .15s ease; }
-  .button:hover, .button:focus-visible { background: var(--teal); border-color: var(--teal); color: #151515; outline-color: var(--teal); }
+  .button { position: relative; isolation: isolate; overflow: hidden; display: inline-grid; place-items: center; width: 112px; height: 42px; padding: 0; border: 1px solid #a6a5a2; border-radius: 24px; color: var(--ink); font-size: 12px; font-weight: 500; line-height: 1.4; transition: color .3s, border-color .3s; }
+  .button::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--teal); transform: translateY(101%); transition: transform .3s cubic-bezier(.22, 1, .36, 1); }
+  .button-label, .button-soon { grid-area: 1 / 1; transition: opacity .2s, transform .3s; }
+  .button-label { display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .button-label svg { flex: 0 0 16px; width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .button-soon { opacity: 0; transform: translateY(8px); font-size: 10px; white-space: nowrap; }
+  .button:is(:hover, :focus-visible, .show-soon) { border-color: var(--teal); color: #151515; outline-color: var(--teal); }
+  .button:is(:hover, :focus-visible, .show-soon)::before { transform: translateY(0); }
+  .button[data-placeholder]:is(:hover, :focus-visible, .show-soon) .button-label { opacity: 0; transform: translateY(-8px); }
+  .button[data-placeholder]:is(:hover, :focus-visible, .show-soon) .button-soon { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) { .button, .button::before, .button-label, .button-soon { transition: none; } }
   footer { border-top: 1px solid var(--line); padding: 15px 0 40px; text-align: center; color: var(--muted); font-size: 12px; }
   .skip-link { position: absolute; top: -100px; left: 20px; padding: 8px 14px; background: var(--panel); z-index: 10; }
   .skip-link:focus { top: 10px; }

@@ -15,7 +15,7 @@ sys.modules[spec.name] = module
 spec.loader.exec_module(module)
 figure = module.load_source_module().build_figure()
 module.apply_dark_theme(figure)
-figure.set_facecolor('#101214')
+figure.set_facecolor('#0a0a0a')
 for artist in figure.artists:
     if isinstance(artist, matplotlib.patches.PathPatch):
         artist.set_facecolor('none')
