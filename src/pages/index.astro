@@ -3,6 +3,8 @@ import { publications } from '../data/publications';
 import AsciiBackground from '../components/AsciiBackground.astro';
 import MuMpcLogo from '../components/MuMpcLogo.astro';
 import FactorizedConformalLogo from '../components/FactorizedConformalLogo.astro';
+import gifDurations from '../../easter_eggs/durations.json';
+const portraitGifs = Object.entries(import.meta.glob<string>('../../easter_eggs/*.gif', { eager: true, query: '?url', import: 'default' })).map(([path, src]) => ({ src, duration: gifDurations[path.split('/').pop() as keyof typeof gifDurations] }));
 const seoTitle = 'Devesh Nath | Robotics PhD Student at Georgia Tech';
 const seoDescription = 'Devesh Nath is a Robotics PhD student at Georgia Tech researching safe robot control, learned world models, and scalable planning with statistical safety guarantees.';
 const siteUrl = 'https://www.deveshnath.com/';
@@ -51,9 +53,9 @@ const structuredData = {
     <a class="skip-link" href="#about">Skip to content</a>
     <div class="container">
       <header class="header">
-        <div class="portrait">
+        <button class="portrait" type="button" aria-label="Play a random animation" data-gifs={JSON.stringify(portraitGifs)}>
           <img src="/images/me.jpeg" alt="Devesh Nath" width="1200" height="1600" fetchpriority="high" />
-        </div>
+        </button>
         <div class="intro">
           <h1>Devesh Nath</h1>
           <p>Third-year PhD Student, Robotics · Georgia Tech</p>
@@ -135,6 +137,38 @@ const structuredData = {
       <footer>Devesh Nath</footer>
     </div>
     <script>
+      const portrait = document.querySelector<HTMLButtonElement>('.portrait')!;
+      const portraitImage = portrait.querySelector<HTMLImageElement>('img')!;
+      const gifs: { src: string; duration: number }[] = JSON.parse(portrait.dataset.gifs ?? '[]');
+      const originalSrc = portraitImage.src;
+      const originalAlt = portraitImage.alt;
+      let playing = false;
+      let lastGif = '';
+      const openSurprise = (event: Event) => {
+        event.preventDefault();
+        if (playing) return;
+        const choices = gifs.filter((gif) => gif.src !== lastGif);
+        if (!choices.length) return;
+        const selected = choices[Math.floor(Math.random() * choices.length)];
+        lastGif = selected.src;
+        playing = true;
+        const animation = new Image();
+        animation.onload = () => {
+          portraitImage.src = animation.src;
+          portraitImage.alt = 'Surprise animation';
+          portrait.classList.add('playing-gif');
+          window.setTimeout(() => {
+            portraitImage.src = originalSrc;
+            portraitImage.alt = originalAlt;
+            portrait.classList.remove('playing-gif');
+            playing = false;
+          }, selected.duration);
+        };
+        animation.onerror = () => { playing = false; };
+        animation.src = `${selected.src}?play=${Date.now()}`;
+      };
+      portrait.addEventListener('click', openSurprise);
+      portrait.addEventListener('contextmenu', openSurprise);
       // Placeholder links remain on the current publication until real URLs are added.
       document.querySelectorAll<HTMLAnchorElement>('a[data-placeholder]').forEach((link) => {
         let resetTimer: ReturnType<typeof setTimeout>;
@@ -291,7 +325,8 @@ const structuredData = {
   h1, h2, h3, h4, p { margin: 0; }
   .container { position: relative; z-index: 1; width: 86%; max-width: 960px; margin: 0 auto; }
   .header { display: grid; grid-template-columns: 22% 1fr; gap: 4%; align-items: center; margin: 50px 0 60px; }
-  .portrait { width: 100%; aspect-ratio: 1; overflow: hidden; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; }
+  .portrait { display: block; padding: 0; width: 100%; aspect-ratio: 1; overflow: hidden; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; cursor: pointer; }
+  .portrait.playing-gif img { transform: none; object-fit: contain; object-position: center; }
   .portrait img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 55%; transform: scale(1.85); transform-origin: 50% 55%; }
   h1 { margin-bottom: 4px; font-size: 34px; font-weight: 700; letter-spacing: -.8px; line-height: 1.2; }
   .intro p { font-size: 13px; line-height: 1.75; color: var(--muted); }
