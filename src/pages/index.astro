@@ -118,7 +118,7 @@ const structuredData = {
                   )}
                 </div>
                 <div class="paper-content">
-                  <h4 id={`${paper.slug}-title`}>{paper.slug === 'micrompc' ? <><MuMpcLogo />{paper.title.replace(/^μMPC/, '')}</> : paper.slug === 'adaptive-conformal-prediction' ? <><FactorizedConformalLogo />{paper.title.replace(/^Factorized Conformal Prediction/, '')}</> : paper.title}</h4>
+                  <h4 id={`${paper.slug}-title`}>{paper.slug === 'micrompc' ? <><MuMpcLogo />{paper.title.replace(/^μMPC/, '')}</> : paper.slug === 'adaptive-conformal-prediction' ? <><span class="faccp-name">FacCP</span>: <FactorizedConformalLogo />{paper.title.replace(/^Factorized Conformal Prediction/, '')}</> : paper.title}</h4>
                   <p class="authors">{paper.authors.split('Devesh Nath').map((part, index) => <>{index > 0 && <strong>Devesh Nath</strong>}{part}</>)}</p>
                   <p class="venue">{paper.venue}{paper.distinction && <> · <span class="distinction">{paper.distinction}</span></>}</p>
                   <div class="paper-buttons">
@@ -269,6 +269,7 @@ const structuredData = {
 
 <style>
   @font-face { font-family: 'Lato'; src: url('/fonts/Lato-Bold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
+  @font-face { font-family: 'Lato'; src: url('/fonts/Lato-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
   :global(*) { box-sizing: border-box; }
   :global(html) {
     color-scheme: dark;
@@ -331,6 +332,7 @@ const structuredData = {
   .authors strong { color: var(--ink); font-weight: 700; }
   .venue { color: var(--teal); font-size: 13px; font-style: italic; line-height: 1.7; }
   .distinction { color: #ef8585; }
+  .faccp-name { color: #f0a35e; }
   .paper-buttons { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
   .button { position: relative; isolation: isolate; overflow: hidden; display: inline-grid; place-items: center; width: 112px; height: 42px; padding: 0; border: 1px solid #a6a5a2; border-radius: 24px; color: var(--ink); font-size: 12px; font-weight: 500; line-height: 1.4; transition: color .3s, border-color .3s; }
   .button::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--teal); transform: translateY(101%); transition: transform .3s cubic-bezier(.22, 1, .36, 1); }
