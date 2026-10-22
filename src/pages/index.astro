@@ -138,10 +138,9 @@ const structuredData = {
     </div>
     <script>
       const portrait = document.querySelector<HTMLButtonElement>('.portrait')!;
-      const portraitImage = portrait.querySelector<HTMLImageElement>('img')!;
+      let portraitImage = portrait.querySelector<HTMLImageElement>('img')!;
+      const originalPortrait = portraitImage.cloneNode(true) as HTMLImageElement;
       const gifs: { src: string; duration: number }[] = JSON.parse(portrait.dataset.gifs ?? '[]');
-      const originalSrc = portraitImage.src;
-      const originalAlt = portraitImage.alt;
       let playing = false;
       let lastGif = '';
       const openSurprise = (event: Event) => {
@@ -158,8 +157,9 @@ const structuredData = {
           portraitImage.alt = 'Surprise animation';
           portrait.classList.add('playing-gif');
           window.setTimeout(() => {
-            portraitImage.src = originalSrc;
-            portraitImage.alt = originalAlt;
+            const restoredPortrait = originalPortrait.cloneNode(true) as HTMLImageElement;
+            portraitImage.replaceWith(restoredPortrait);
+            portraitImage = restoredPortrait;
             portrait.classList.remove('playing-gif');
             playing = false;
           }, selected.duration);
