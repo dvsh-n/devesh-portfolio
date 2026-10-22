@@ -12,8 +12,9 @@ OUTPUT.parent.mkdir(parents=True, exist_ok=True)
 subprocess.run([
     'ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-i', str(SOURCE),
     '-filter_complex',
-    # Preserve native foreground resolution inside the shared 8:5 frame.
-    '[0:v]setsar=1,split=2[fg][back];'
+    # Fit the foreground to the frame; blur is visible only in unused space.
+    '[0:v]setsar=1,split=2[front][back];'
+    '[front]scale=3840:2400:force_original_aspect_ratio=decrease,setsar=1[fg];'
     '[back]scale=640:400:force_original_aspect_ratio=increase,crop=640:400,'
     'gblur=sigma=55:steps=3,eq=brightness=-0.12:saturation=0.6,'
     'colorchannelmixer=rr=0.55:gg=0.55:bb=0.55,scale=3840:2400[bg];'

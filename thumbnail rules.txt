@@ -12,13 +12,18 @@ Background treatment (baked into the generated video):
 - Saturation: 0.6.
 - RGB multipliers: rr=0.55:gg=0.55:bb=0.55.
 - Enlarge the blurred background to fill the final 8:5 frame.
-- Center the sharp foreground over it, preserving its aspect ratio.
+- Scale the sharp foreground to the largest size that fits the final frame,
+  preserving its aspect ratio (force_original_aspect_ratio=decrease).
+- Center it over the blurred background. Only unused letterbox/pillarbox
+  areas should show blur. Never leave the foreground at native size in a
+  larger frame, and never crop or stretch it to fill the frame.
 - No audio; H.264/yuv420p with faststart for browser playback.
 
 FacCP:
 Source: src/pages/projects/adaptive-conformal-prediction/FacCp.mp4
 Thumbnail: public/projects/adaptive-conformal-prediction/assets/thumbnail.mp4
 Rebuild: python3 scripts/build-adaptive-thumbnail.py
-Final frame: 3840 x 2400; foreground stays at its native resolution.
+Final frame: 3840 x 2400; the 16:9 foreground fills 3840 x 2160,
+leaving only 120 pixels of blurred background above and below.
 The publication uses a content-hash query parameter for cache invalidation;
 the build script updates that parameter after generating the thumbnail.

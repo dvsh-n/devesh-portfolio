@@ -1,4 +1,4 @@
-const facCpThumbnailUrl = '/projects/adaptive-conformal-prediction/assets/thumbnail.mp4?v=5d88a90dbef6';
+const facCpThumbnailUrl = '/projects/adaptive-conformal-prediction/assets/thumbnail.mp4?v=07a421fc5233';
 
 export interface Publication {
   slug: string;
