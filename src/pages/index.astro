@@ -163,7 +163,7 @@ const structuredData = {
             portraitImage = restoredPortrait;
             portrait.classList.remove('playing-gif');
             playing = false;
-          }, selected.duration);
+          }, Math.max(2500, selected.duration));
         };
         animation.onerror = () => { playing = false; };
         animation.src = `${selected.src}?play=${Date.now()}`;
