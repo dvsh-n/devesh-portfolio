@@ -1,0 +1,24 @@
+Publication video thumbnails
+
+Keep the source videos unchanged. Generate separate thumbnail videos with
+the matching scripts/build-*-thumbnail.py script, then point the publication
+media entry in src/data/publications.ts to the generated thumbnail.
+Rebuild the thumbnail whenever its source video changes.
+
+Background treatment (baked into the generated video):
+- Scale to cover 640 x 400 and crop to that size.
+- Gaussian blur: gblur=sigma=55:steps=3.
+- Brightness: -0.12.
+- Saturation: 0.6.
+- RGB multipliers: rr=0.55:gg=0.55:bb=0.55.
+- Enlarge the blurred background to fill the final 8:5 frame.
+- Center the sharp foreground over it, preserving its aspect ratio.
+- No audio; H.264/yuv420p with faststart for browser playback.
+
+FacCP:
+Source: src/pages/projects/adaptive-conformal-prediction/FacCp.mp4
+Thumbnail: public/projects/adaptive-conformal-prediction/assets/thumbnail.mp4
+Rebuild: python3 scripts/build-adaptive-thumbnail.py
+Final frame: 3840 x 2400; foreground stays at its native resolution.
+The publication uses a content-hash query parameter for cache invalidation;
+the build script updates that parameter after generating the thumbnail.

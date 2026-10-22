@@ -1,5 +1,7 @@
 """Frame the adaptive conformal prediction animation for the publication thumbnail (requires ffmpeg)."""
 from pathlib import Path
+import hashlib
+import re
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -19,4 +21,15 @@ subprocess.run([
     '-map', '[out]', '-an', '-c:v', 'libx264', '-crf', '18', '-preset', 'slow',
     '-movflags', '+faststart', str(OUTPUT),
 ], check=True)
+digest = hashlib.sha256(OUTPUT.read_bytes()).hexdigest()[:12]
+publications = ROOT / 'src/data/publications.ts'
+data = publications.read_text()
+data, count = re.subn(
+    r"const facCpThumbnailUrl = '[^']*';",
+    f"const facCpThumbnailUrl = '/projects/adaptive-conformal-prediction/assets/thumbnail.mp4?v={digest}';",
+    data,
+)
+if count != 1:
+    raise RuntimeError('Expected one FacCP thumbnail URL in src/data/publications.ts')
+publications.write_text(data)
 print(f'Created {OUTPUT.relative_to(ROOT)}')
