@@ -1,3 +1,5 @@
+import facCpThumbnailUrl from '../pages/projects/adaptive-conformal-prediction/FacCp.mp4?url';
+
 export interface Publication {
   slug: string;
   year: number;
@@ -57,7 +59,7 @@ export const publications: Publication[] = [
     year: 2027,
     paperUrl: '#', // Replace with the arXiv URL.
     videoUrl: '#', // Replace with the YouTube URL.
-    media: { src: '/projects/adaptive-conformal-prediction/assets/thumbnail.mp4', type: 'video' },
+    media: { src: facCpThumbnailUrl, type: 'video' },
     title: 'Factorized Conformal Prediction Via Learned Residual-Law Retrieval',
     venue: 'In Submission',
     authors: 'Devesh Nath, Rahul Rustagi, Glen Chou',
