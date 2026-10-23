@@ -1,7 +1,6 @@
 ---
-import { publications } from '../../../data/publications';
+import videoUrl from './FacCp.mp4?url';
 import FactorizedConformalLogo from '../../../components/FactorizedConformalLogo.astro';
-const project = publications.find((paper) => paper.slug === 'adaptive-conformal-prediction')!;
 ---
 
 <!doctype html>
@@ -16,9 +15,45 @@ const project = publications.find((paper) => paper.slug === 'adaptive-conformal-
   </head>
   <body>
     <main>
-      <h1>FacCP</h1>
-      <p class="subtitle"><FactorizedConformalLogo /> Via Learned Residual-Law Retrieval</p>
+      <header>
+        <h1>FacCP</h1>
+        <p class="subtitle"><FactorizedConformalLogo /> Via Learned Residual-Law Retrieval</p>
+        <p class="authors"><a href="/">Devesh Nath</a><span aria-hidden="true">·</span><span>Rahul Rustagi</span><span aria-hidden="true">·</span><span>Glen Chou</span></p>
+        <nav aria-label="Project resources">
+          {[
+            { label: 'Paper', path: 'M14 3H6v18h12V7l-4-4Z M14 3v5h4 M9 12h6 M9 16h6' },
+            { label: 'Code', path: 'm8 7-5 5 5 5 M16 7l5 5-5 5 M14 4l-4 16' },
+            { label: 'Video', path: 'm8 5 11 7-11 7V5Z' },
+          ].map(({ label, path }) => (
+            label === 'Video' ? (
+              <a href="#video" aria-label="Watch the summary video"><span class="resource-label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d={path} /></svg><span>{label}</span></span></a>
+            ) : (
+            <button type="button" aria-disabled="true" aria-label={`${label}: Coming Soon!`}>
+              <span class="resource-label" aria-hidden="true"><svg viewBox="0 0 24 24"><path d={path} /></svg><span>{label}</span></span>
+              <span class="soon" aria-hidden="true">Coming Soon!</span>
+            </button>
+            )
+          ))}
+        </nav>
+      </header>
+      <section id="video" aria-label="FacCP full presentation">
+        <h2>Summary</h2>
+        <video controls autoplay muted playsinline preload="auto" aria-label="FacCP full presentation video">
+          <source src={videoUrl} type="video/mp4" />
+          Your browser does not support embedded video. <a href={videoUrl}>Download the video</a>.
+        </video>
+      </section>
     </main>
+    <script>
+      document.querySelectorAll<HTMLButtonElement>('nav button').forEach((button) => {
+        let resetTimer: ReturnType<typeof setTimeout>;
+        button.addEventListener('click', () => {
+          clearTimeout(resetTimer);
+          button.classList.add('show-soon');
+          resetTimer = setTimeout(() => button.classList.remove('show-soon'), 1500);
+        });
+      });
+    </script>
   </body>
 </html>
 
@@ -27,7 +62,42 @@ const project = publications.find((paper) => paper.slug === 'adaptive-conformal-
   @font-face { font-family: 'Lato'; src: url('/fonts/Lato-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
   html { color-scheme: dark; background: #0a0a0a; min-height: 100%; }
   body { margin: 0; color: #f4f7fb; font-family: 'Lato', sans-serif; -webkit-font-smoothing: antialiased; }
-  main { width: min(100% - 48px, 1000px); margin: 0 auto; padding: 80px 0; text-align: center; }
+  main { width: min(100% - 64px, 1000px); margin: 0 auto; padding: 80px 0 72px; }
+  header { text-align: center; }
   h1 { margin: 0; color: #f0a35e; font-size: clamp(56px, 8vw, 88px); font-weight: 700; letter-spacing: -.035em; line-height: 1.15; text-wrap: balance; }
   .subtitle { margin: 24px 0 0; font-size: clamp(24px, 3.5vw, 36px); line-height: 1.4; text-wrap: balance; }
+  .authors { display: flex; align-items: center; justify-content: center; gap: 15px; margin: 24px 0 0; color: #b7c0c8; font-size: 17px; line-height: 1.6; }
+  .authors a { color: inherit; text-decoration: none; }
+  .authors a:hover { color: #f0a35e; }
+  .authors > span[aria-hidden] { color: #55616c; }
+  nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin: 29px 0 48px; }
+  nav :is(button, a) { position: relative; isolation: isolate; overflow: hidden; display: inline-grid; place-items: center; width: 112px; height: 42px; padding: 0; flex: 0 0 112px; border: 1px solid #343c43; border-radius: 24px; background: #1b2025; color: #e5ebef; font: 700 14px/1.4 'Lato', sans-serif; cursor: default; transition: border-color .3s; }
+  nav :is(button, a)::before { content: ''; position: absolute; inset: 0; z-index: -1; background: rgb(240 163 94 / 12%); transform: translateY(101%); transition: transform .3s cubic-bezier(.22, 1, .36, 1); }
+  nav :is(button, a) > span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: opacity .2s, transform .3s; }
+  nav :is(button, a) .resource-label { display: grid; grid-template-columns: 16px 38px; align-content: center; justify-content: center; align-items: center; gap: 8px; line-height: 16px; }
+  .resource-label > span { display: block; text-align: left; }
+  nav :is(button, a) .soon { opacity: 0; transform: translateY(8px); color: #f0a35e; font-size: 11px; letter-spacing: .3px; white-space: nowrap; }
+  nav :is(button, a):is(:hover, :focus-visible, .show-soon) { border-color: #f0a35e; }
+  nav :is(button, a):is(:hover, :focus-visible, .show-soon)::before { transform: translateY(0); }
+  nav :is(button, a):is(:hover, :focus-visible, .show-soon) .resource-label { opacity: 0; transform: translateY(-8px); }
+  nav :is(button, a):is(:hover, :focus-visible, .show-soon) .soon { opacity: 1; transform: translateY(0); }
+  nav a { cursor: pointer; text-decoration: none; }
+  nav a:is(:hover, :focus-visible) .resource-label { opacity: 1; transform: none; }
+  :is(a, button):focus-visible { outline: 2px solid #f0a35e; outline-offset: 5px; }
+  nav svg { display: block; width: 16px; height: 16px; flex: 0 0 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  @media (prefers-reduced-motion: reduce) { nav :is(button, a), nav :is(button, a)::before, .resource-label, .soon { transition: none; } }
+  #video { position: relative; }
+  #video::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 1px; background: #f0a35e; }
+  #video { scroll-margin-top: 24px; padding-top: 40px; }
+  #video h2 { text-align: center; margin: 0 0 28px; font-size: 26px; letter-spacing: -.3px; }
+  video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #000; }
+  * { box-sizing: border-box; }
+  @media (max-width: 600px) {
+    main { width: calc(100% - 36px); padding: 52px 0 36px; }
+    .subtitle { font-size: 25px; }
+    .authors { flex-wrap: wrap; font-size: 16px; gap: 12px; }
+    nav { gap: 8px; margin: 25px 0 34px; }
+    nav :is(button, a) { width: 94px; flex-basis: 94px; }
+    #video { padding-top: 28px; }
+  }
 </style>

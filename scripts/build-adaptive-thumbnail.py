@@ -8,9 +8,15 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / 'src/pages/projects/adaptive-conformal-prediction/FacCp.mp4'
 OUTPUT = ROOT / 'public/projects/adaptive-conformal-prediction/assets/thumbnail.mp4'
 
+# Reachable-set prediction through Local Guarantees; exclude the experiments.
+START_SECONDS = 16
+END_SECONDS = 82
+
 OUTPUT.parent.mkdir(parents=True, exist_ok=True)
 subprocess.run([
-    'ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-i', str(SOURCE),
+    'ffmpeg', '-hide_banner', '-loglevel', 'error', '-y',
+    '-ss', str(START_SECONDS), '-i', str(SOURCE),
+    '-t', str(END_SECONDS - START_SECONDS),
     '-filter_complex',
     # Fit the foreground to the frame; blur is visible only in unused space.
     '[0:v]setsar=1,split=2[front][back];'

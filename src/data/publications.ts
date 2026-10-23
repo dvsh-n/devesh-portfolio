@@ -1,4 +1,4 @@
-const facCpThumbnailUrl = '/projects/adaptive-conformal-prediction/assets/thumbnail.mp4?v=07a421fc5233';
+const facCpThumbnailUrl = '/projects/adaptive-conformal-prediction/assets/thumbnail.mp4?v=f1e7ccc7dd34';
 
 export interface Publication {
   slug: string;
@@ -58,7 +58,7 @@ export const publications: Publication[] = [
     slug: 'adaptive-conformal-prediction',
     year: 2027,
     paperUrl: '#', // Replace with the arXiv URL.
-    videoUrl: '#', // Replace with the YouTube URL.
+    videoUrl: '/projects/adaptive-conformal-prediction/#video',
     media: { src: facCpThumbnailUrl, type: 'video' },
     title: 'Factorized Conformal Prediction Via Learned Residual-Law Retrieval',
     venue: 'In Submission',
