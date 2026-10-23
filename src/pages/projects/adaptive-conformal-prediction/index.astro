@@ -1,6 +1,79 @@
 ---
 import videoUrl from './FacCp.mp4?url';
+import relatedWorkUrl from './related-work.mp4?url';
+import method0Url from './method_videos/01-reachable-set-prediction.mp4?url';
+import method1Url from './method_videos/02-representation-learning.mp4?url';
+import method2Url from './method_videos/03-local-residual-retrieval.mp4?url';
+import method3Url from './method_videos/04-local-residual-weights.mp4?url';
+import method4Url from './method_videos/05-local-geometry-retrieval.mp4?url';
+import method5Url from './method_videos/06-conformalized-local-geometry.mp4?url';
+import method6Url from './method_videos/07-local-guarantees.mp4?url';
+import geometryExperimentUrl from './experiment_videos/01-multiple-geometries.mp4?url';
+import capacityExperimentUrl from './experiment_videos/02-data-and-capacity.mp4?url';
+import reachabilityExperimentUrl from './experiment_videos/03-3d-reachability.mp4?url';
+import geometryPosterUrl from './experiment_videos/01-multiple-geometries.jpg?url';
+import capacityPosterUrl from './experiment_videos/02-data-and-capacity.jpg?url';
+import reachabilityPosterUrl from './experiment_videos/03-3d-reachability.jpg?url';
+import intersectionPlotUrl from './experiment_plots/multimodal-intersection-and-turn.svg?url';
+import neighborsPlotUrl from './experiment_plots/multimodal-neighbors.svg?url';
+import singleModePlotUrl from './experiment_plots/single-mode.svg?url';
 import FactorizedConformalLogo from '../../../components/FactorizedConformalLogo.astro';
+const methodSteps = [
+  { title: 'Reachable Set Prediction', url: method0Url, explanation: 'Prediction sets should adapt to how prediction errors vary with the query. Computing retrieval weights directly from distances in the input X can be unreliable: irrelevant features affect those distances without providing information about uncertainty. In high dimensions, this makes relevant reference examples harder to identify and residual distributions harder to estimate. The localization metric must therefore reflect changes in uncertainty, rather than all variation in the input.' },
+  { title: 'Representation Learning', url: method1Url, explanation: 'FacCP learns a lower-dimensional representation for computing retrieval weights. The representation is trained with an energy-score objective that evaluates the residual distribution retrieved for each query. Its target is the full conditional residual law, rather than a particular covariance or set shape. By retaining uncertainty-relevant information and suppressing irrelevant variation, the learned space can make localization more statistically efficient.' },
+  { title: 'Local Residual Law · Retrieve Similar Errors', url: method2Url, explanation: 'For a new query, FacCP locates reference examples nearby in the learned representation. Proximity is trained to reflect similarity in conditional residual distributions, so examples can be informative even when their original inputs differ substantially. Only the queries are embedded: the associated residuals remain in their original space. The representation determines which residuals to emphasize without compressing their multivariate structure.' },
+  { title: 'Local Residual Law · Weight the Residuals', url: method3Url, explanation: 'FacCP assigns each reference residual a normalized weight that decreases with distance from the query in the learned space. A temperature parameter controls how local the weighting is. The weighted collection of observed residuals estimates the query’s conditional residual law. This distribution is the shared intermediate object used to construct local geometry, separating uncertainty estimation from the choice of prediction-set family.' },
+  { title: 'Local Geometry Retrieval', url: method4Url, explanation: 'A geometry constructor converts the retrieved residual law into a family of nested sets. For ellipsoids, the weighted residual mean and covariance determine the center, orientation, and relative axis lengths; an inflation parameter controls overall size. The same learned representation also supports hyperboxes, zonotopes, and density-based sets without retraining. Each constructor is then calibrated separately.' },
+  { title: 'Conformalized Local Geometry', url: method5Url, explanation: 'After fixing the learned geometry, FacCP scores each independent calibration example by the smallest inflation needed to contain its residual. The full calibration sample determines one global conformal threshold, while each query retains its own local shape. Under exchangeability, the resulting prediction set has finite-sample marginal coverage regardless of retrieval accuracy. The same calibrated set also admits the local coverage bounds described next.' },
+  { title: 'Local Guarantees', url: method6Url, explanation: 'For one global threshold to be meaningful locally, the score distributions must be comparable across queries. Under the paper’s geometry-approximation condition, error in local geometry bounds how much these distributions differ, a property called approximate pivotality. The resulting local coverage bound separates geometry error from finite calibration error. Marginal coverage follows from conformal calibration; approximate local coverage additionally requires accurate geometry under the stated assumptions.' },
+];
+const experiments = [
+  {
+    title: 'One representation, four set geometries',
+    url: geometryExperimentUrl, poster: geometryPosterUrl, width: 2560, height: 990,
+    paragraphs: [
+      'The planar quadcopter task predicts 100-step trajectories from an 806-dimensional query, with a 600-dimensional residual trajectory. One learned representation supplies ellipsoids, hyperboxes, density-based sets, and zonotopes without retraining. Each constructor uses a single trajectory-level conformal threshold targeting 99% simultaneous coverage of the full trajectory.',
+      'The comparison isolates geometry: global sets share one residual geometry across queries, while FacCP retrieves a query-dependent residual law. Across the four constructors, local geometry reduces log volume by 2.34 to 5.57. For ellipsoids, retrieval in the raw or standardized input space gives log volume −26.66, close to the global −25.82; learned retrieval reaches −33.25 with 99.1% coverage. Learning where to retrieve matters, beyond simply making retrieval local.',
+    ],
+  },
+  {
+    title: 'Efficiency with limited data and model capacity',
+    url: capacityExperimentUrl, poster: capacityPosterUrl, width: 2560, height: 990,
+    paragraphs: [
+      'Direct uncertainty models must learn a query-dependent covariance or flow. FacCP instead learns the metric used to retrieve observed residuals, then constructs geometry from those residuals. The capacity sweeps match learned parameter counts and use the same trajectory-level calibration procedure, testing how efficiently each method uses its model budget.',
+      'At roughly 5,000 parameters, FacCP produces sets over 1,000× smaller than resCONTRA at comparable coverage; in the low-capacity comparison with covariance prediction, sets are over 250× smaller. With 20% of the training data, the reductions are 211× relative to resCONTRA and 46× relative to covariance prediction, while maintaining coverage. These advantages shrink as direct models receive sufficient data and capacity.',
+    ],
+  },
+  {
+    title: 'Reachability with 3,212 input dimensions',
+    url: reachabilityExperimentUrl, poster: reachabilityPosterUrl, width: 2560, height: 990,
+    paragraphs: [
+      'The 3D quadcopter experiment extends the same construction to 200-step rollouts with 12 states and 4 controls. Queries have 3,212 coordinates and residual trajectories have 2,400. Calibration still targets one event: simultaneous coverage of the full trajectory at 99%, rather than separate guarantees for individual times or coordinates. The animation shows coordinate projections of the reachable sets.',
+      'Local retrieval reduces mean per-time-step 12D log volume from −52.52 to −68.99, with essentially unchanged measured coverage: 99.4% for global geometry and 99.3% for local geometry. The capacity and data sweeps again favor retrieval under limited budgets. With sufficient capacity and training data, however, resCONTRA can close the gap and eventually surpass it.',
+    ],
+  },
+  {
+    title: 'Multimodal Autonomous Driving: covering one complete future',
+    plots: [
+      { url: intersectionPlotUrl, width: 1635.88, height: 491.228, label: 'Multimodal prediction at an intersection and a sharp turn' },
+      { url: neighborsPlotUrl, width: 1633.21, height: 286.571, label: 'Multimodal prediction with neighboring agents' },
+    ],
+    paragraphs: [
+      'A frozen MTR forecaster supplies six candidate paths over six seconds. FacCP keeps these predictions fixed and adapts the uncertainty tubes using learned scene–candidate similarity. Coverage requires one candidate tube to contain the entire observed future, without switching between candidates over time. Both global and local SNSA use trajectory-level calibration and the same probability-based allocation of tube radii.',
+      'At the 95% target, FacCP reduces mean footprint from 683.8 to 581.9 m²·s, a 14.9% reduction, with measured whole-path coverage of 94.46% versus 95.19% for global SNSA. FORCE-OPT has a smaller footprint but only 62.29% whole-path coverage in this evaluation; it calibrates per-timestep coverage, a different event. Compactness therefore needs to be assessed alongside the coverage event being measured.',
+    ],
+  },
+  {
+    title: 'Single-mode Autonomous Driving: tighter spatial footprints',
+    plots: [
+      { url: singleModePlotUrl, width: 1633.21, height: 286.571, label: 'Single-mode prediction compared with global SNSA, NLE, and MVCS' },
+    ],
+    paragraphs: [
+      'Using only the highest-probability path removes any benefit from additional forecast modes. At the 97% target, FacCP reduces mean footprint from 3,356.1 to 2,310.1 m²·s, with measured whole-path coverage of 97.53% versus 97.63% for global SNSA. In the illustrated example, both cover the trajectory, while the local tube uses 76.7% less footprint.',
+      'The NLE and MVCS panels show spatial projections of joint trajectory ellipsoids. Their larger footprints do not imply larger joint trajectory volumes: cross-time dependencies can yield a small joint volume with wide spatial projections. Footprint measures spatial occupancy over time, while joint volume also captures which combinations of positions are allowed. The raw MTR tube is narrow here but misses the observed path.',
+    ],
+  },
+];
 ---
 
 <!doctype html>
@@ -16,7 +89,7 @@ import FactorizedConformalLogo from '../../../components/FactorizedConformalLogo
   <body>
     <main>
       <header>
-        <h1>FacCP</h1>
+        <h1><span class="fac-cp">FacCP</span></h1>
         <p class="subtitle"><FactorizedConformalLogo /> Via Learned Residual-Law Retrieval</p>
         <p class="authors"><a href="/">Devesh Nath</a><span aria-hidden="true">·</span><span>Rahul Rustagi</span><span aria-hidden="true">·</span><span>Glen Chou</span></p>
         <nav aria-label="Project resources">
@@ -43,8 +116,214 @@ import FactorizedConformalLogo from '../../../components/FactorizedConformalLogo
           Your browser does not support embedded video. <a href={videoUrl}>Download the video</a>.
         </video>
       </section>
+      <section class="abstract" aria-labelledby="abstract-title">
+        <h2 id="abstract-title">Abstract</h2>
+        <p>Local uncertainty. Global calibration. <span class="fac-cp">FacCP</span> builds prediction sets that adapt to query-dependent uncertainty in high dimensions. It learns a representation that brings examples with similar residual distributions together, then retrieves relevant residuals to estimate each query’s uncertainty. This local residual law determines the set’s shape; a single global conformal quantile calibrates its inflation, preserving finite-sample marginal coverage under exchangeability while using the entire calibration sample. The same learned representation supports ellipsoids, hyperboxes, zonotopes, and density-based sets without retraining.</p>
+        <p><span class="fac-cp">FacCP</span> connects the quality of local uncertainty geometry to local coverage: under a geometry-approximation condition, better geometry bounds how much the score distribution varies across queries. Experiments show why local calibration alone cannot repair a misspecified shape. Across high-dimensional robotic reachability and multimodal autonomous driving, <span class="fac-cp">FacCP</span> produces tighter calibrated sets, with particularly strong data and parameter efficiency when training data or model capacity is limited.</p>
+      </section>
+      <section class="why" aria-labelledby="why-title">
+        <h2 id="why-title">Why <span class="fac-cp">FacCP</span>?</h2>
+        <div class="related-work-media">
+          <video id="related-work-video" muted playsinline preload="auto" disablepictureinpicture disableremoteplayback tabindex="-1" aria-label="Related work compared with FacCP" aria-describedby="why-comparisons">
+            <source src={relatedWorkUrl} type="video/mp4" />
+          </video>
+        </div>
+        <div class="comparison-carousel" role="region" aria-roledescription="carousel" aria-label="Why FacCP comparisons" tabindex="0">
+          <button class="comparison-arrow previous" type="button" aria-label="Previous comparison" aria-controls="why-comparisons" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6" /></svg></button>
+          <div id="why-comparisons" class="comparisons" aria-live="polite">
+          <article class="comparison-card" role="group" aria-roledescription="slide" aria-label="1 of 4">
+            <h3><span class="comparison-number">1 / 4</span><span>Local calibration</span></h3>
+            <p>Estimating a separate calibration threshold near each query can leave too few relevant examples, especially in high dimensions. Changing the threshold also cannot recover a shape that the chosen score cannot express. <span class="fac-cp">FacCP</span> uses local residuals, the predictor’s errors, to build the shape, then uses the entire calibration sample to choose one global inflation threshold.</p>
+          </article>
+          <article class="comparison-card" role="group" aria-roledescription="slide" aria-label="2 of 4" hidden>
+            <h3><span class="comparison-number">2 / 4</span><span>Scalar-score rectification</span></h3>
+            <p>PIT-CP and Rectified CP adjust a chosen scalar score to improve local coverage. But once a score has discarded direction or multiple possible outcomes, adjusting that number cannot bring them back. Rescaling a distance-based ball, for example, cannot turn it into a tilted ellipsoid. <span class="fac-cp">FacCP</span> learns the residual distribution and constructs the geometry before reducing it to a score.</p>
+          </article>
+          <article class="comparison-card" role="group" aria-roledescription="slide" aria-label="3 of 4" hidden>
+            <h3><span class="comparison-number">3 / 4</span><span>Localized scores · SLCP</span></h3>
+            <p>SLCP adapts a chosen scalar-score distribution using nearby examples, but its neighborhoods depend on the chosen features and kernel. Irrelevant features can obscure which examples share the same uncertainty, while scalar scores cannot recover geometry they discard. <span class="fac-cp">FacCP</span> explicitly learns a space for retrieving similar multivariate errors, adapting the set’s shape before reducing it to a score.</p>
+          </article>
+          <article class="comparison-card" role="group" aria-roledescription="slide" aria-label="4 of 4" hidden>
+            <h3><span class="comparison-number">4 / 4</span><span>Set-specific learning</span></h3>
+            <p>Learning geometry directly can tie the model to one set family and be data- and parameter-inefficient for high-dimensional structured outputs. <span class="fac-cp">FacCP</span> retrieves a residual distribution instead: one learned representation supports ellipsoids, hyperboxes, zonotopes, and density-based sets without retraining, with separate conformal calibration for each constructor. This reuse is especially useful when training data or model capacity is limited.</p>
+          </article>
+        </div>
+          <button class="comparison-arrow next" type="button" aria-label="Next comparison" aria-controls="why-comparisons"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6" /></svg></button>
+        </div>
+        <p class="comparison-citations"><small>References: LCP — Guan (2023); RLCP — Hore &amp; Barber (2025); PIT-CP — Laplante (2026); Rectified CP — Plassier et al. (2025a); SLCP — Han et al. (2022); CP-SLS-MPC — Srinivasan et al. (2026).</small></p>
+      </section>
+      <section class="method" aria-labelledby="method-title">
+        <h2 id="method-title">Method</h2>
+        <div class="method-carousel" role="region" aria-roledescription="carousel" aria-label="Method breakdown" tabindex="0">
+          <button class="method-arrow previous" type="button" aria-label="Previous method step" aria-controls="method-slides" disabled>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6" /></svg>
+          </button>
+          <div id="method-slides">
+            {methodSteps.map((step, index) => (
+              <figure class="method-card" hidden={index !== 0} role="group" aria-roledescription="slide" aria-label={`${index + 1} of ${methodSteps.length}: ${step.title}`}>
+                <video muted playsinline preload="auto" aria-label={step.title}>
+                  <source src={step.url} type="video/mp4" />
+                </video>
+                <figcaption class="method-explanation">
+                  <p><span class="method-number">{index + 1} / {methodSteps.length}</span> <strong class="method-inline-title">{step.title}.</strong> {step.explanation.split('FacCP').map((part, partIndex) => <>{partIndex > 0 && <span class="fac-cp">FacCP</span>}{part}</>)}</p>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+          <button class="method-arrow next" type="button" aria-label="Next method step" aria-controls="method-slides">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6" /></svg>
+          </button>
+        </div>
+      </section>
+      <section class="experiments" aria-labelledby="experiments-title">
+        <h2 id="experiments-title">Numerical Experiments</h2>
+        {experiments.map((experiment, index) => (
+          <article class="experiment" aria-labelledby={`experiment-${index}-title`}>
+            <h3 id={`experiment-${index}-title`}>{experiment.title}</h3>
+            {experiment.plots ? (
+              <div class="experiment-plots">
+                {experiment.plots.map((plot) => (
+                  <figure class="experiment-plot">
+                    <img src={plot.url} width={plot.width} height={plot.height} alt={plot.label} loading="lazy" decoding="async" />
+                  </figure>
+                ))}
+              </div>
+            ) : (
+              <video class="experiment-video" muted playsinline preload="metadata" disablepictureinpicture disableremoteplayback tabindex="-1" poster={experiment.poster} width={experiment.width} height={experiment.height} aria-label={experiment.title} aria-describedby={`experiment-${index}-explanation`}>
+                <source src={experiment.url} type="video/mp4" />
+              </video>
+            )}
+            <div class="experiment-explanation" id={`experiment-${index}-explanation`}>
+              {experiment.paragraphs.map((paragraph) => (
+                <p>{paragraph.split('FacCP').map((part, partIndex) => <>{partIndex > 0 && <span class="fac-cp">FacCP</span>}{part}</>)}</p>
+              ))}
+            </div>
+          </article>
+        ))}
+      </section>
+      <section class="citation" aria-labelledby="citation-title">
+        <h2 id="citation-title">Citation</h2>
+        <div class="citation-block">
+          <pre><code id="citation-text">{`@misc{FacCP_2026,
+  title = {Factorized Conformal Prediction via Learned Residual-Law Retrieval},
+  author = {Nath, Devesh and Rustagi, Rahul and Chou, Glen},
+  note = {Preprint},
+  year = {2026}
+}`}</code></pre>
+          <button class="copy-citation" type="button" aria-label="Copy citation">Copy</button>
+        </div>
+      </section>
     </main>
     <script>
+      const copyCitation = document.querySelector<HTMLButtonElement>('.copy-citation')!;
+      copyCitation.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(document.querySelector('#citation-text')?.textContent ?? '');
+          copyCitation.textContent = 'Copied!';
+        } catch {
+          copyCitation.textContent = 'Unable to copy';
+        }
+        window.setTimeout(() => { copyCitation.textContent = 'Copy'; }, 1500);
+      });
+      const relatedVideo = document.querySelector<HTMLVideoElement>('#related-work-video')!;
+      let relatedFinished = false;
+      const relatedObserver = new IntersectionObserver(([entry]) => {
+        if (relatedFinished) return;
+        if (entry.isIntersecting) relatedVideo.play().catch(() => {});
+        else relatedVideo.pause();
+      }, { threshold: 0.25 });
+      relatedVideo.loop = false;
+      relatedVideo.addEventListener('ended', () => {
+        relatedFinished = true;
+        relatedVideo.pause();
+        relatedObserver.disconnect();
+      }, { once: true });
+      relatedObserver.observe(relatedVideo);
+
+      const carousel = document.querySelector<HTMLElement>('.comparison-carousel')!;
+      const cards = [...carousel.querySelectorAll<HTMLElement>('.comparison-card')];
+      const previous = carousel.querySelector<HTMLButtonElement>('.previous')!;
+      const next = carousel.querySelector<HTMLButtonElement>('.next')!;
+      let activeComparison = 0;
+      const showComparison = (index: number) => {
+        if (index < 0 || index >= cards.length) return;
+        activeComparison = index;
+        cards.forEach((card, i) => { card.hidden = i !== index; });
+        previous.disabled = index === 0;
+        next.disabled = index === cards.length - 1;
+      };
+      previous.addEventListener('click', () => showComparison(activeComparison - 1));
+      next.addEventListener('click', () => showComparison(activeComparison + 1));
+      carousel.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+          event.preventDefault();
+          showComparison(activeComparison + (event.key === 'ArrowLeft' ? -1 : 1));
+        }
+      });
+
+      const methodCarousel = document.querySelector<HTMLElement>('.method-carousel')!;
+      const methodCards = [...methodCarousel.querySelectorAll<HTMLElement>('.method-card')];
+      const methodPrevious = methodCarousel.querySelector<HTMLButtonElement>('.previous')!;
+      const methodNext = methodCarousel.querySelector<HTMLButtonElement>('.next')!;
+      let active = 0;
+      let visible = false;
+      const finished = new WeakSet<HTMLVideoElement>();
+      document.querySelectorAll<HTMLVideoElement>('#video video, .method-card video').forEach((video) => {
+        video.loop = false;
+        video.addEventListener('ended', () => {
+          finished.add(video);
+          video.pause();
+        });
+      });
+      const updatePlayback = () => methodCards.forEach((card, index) => {
+        const video = card.querySelector('video')!;
+        if (index === active && visible && !finished.has(video) && !video.ended) video.play().catch(() => {});
+        else video.pause();
+      });
+      const showStep = (index: number) => {
+        if (index < 0 || index >= methodCards.length) return;
+        active = index;
+        methodCards.forEach((card, i) => {
+          card.hidden = i !== active;
+          if (i === active) {
+            const video = card.querySelector('video')!;
+            finished.delete(video);
+            video.currentTime = 0;
+          }
+        });
+        methodPrevious.disabled = active === 0;
+        methodNext.disabled = active === methodCards.length - 1;
+        updatePlayback();
+      };
+      methodPrevious.addEventListener('click', () => showStep(active - 1));
+      methodNext.addEventListener('click', () => showStep(active + 1));
+      methodCarousel.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+          event.preventDefault();
+          showStep(active + (event.key === 'ArrowLeft' ? -1 : 1));
+        }
+      });
+      new IntersectionObserver(([entry]) => {
+        visible = entry.isIntersecting;
+        updatePlayback();
+      }, { threshold: 0.25 }).observe(methodCarousel);
+
+      document.querySelectorAll<HTMLVideoElement>('.experiment-video').forEach((video) => {
+        let completed = false;
+        const observer = new IntersectionObserver(([entry]) => {
+          if (completed) return;
+          if (entry.isIntersecting) video.play().catch(() => {});
+          else video.pause();
+        }, { threshold: 0.25 });
+        video.loop = false;
+        video.addEventListener('ended', () => {
+          completed = true;
+          video.pause();
+          observer.disconnect();
+        }, { once: true });
+        observer.observe(video);
+      });
+
       document.querySelectorAll<HTMLButtonElement>('nav button').forEach((button) => {
         let resetTimer: ReturnType<typeof setTimeout>;
         button.addEventListener('click', () => {
@@ -86,11 +365,70 @@ import FactorizedConformalLogo from '../../../components/FactorizedConformalLogo
   :is(a, button):focus-visible { outline: 2px solid #f0a35e; outline-offset: 5px; }
   nav svg { display: block; width: 16px; height: 16px; flex: 0 0 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
   @media (prefers-reduced-motion: reduce) { nav :is(button, a), nav :is(button, a)::before, .resource-label, .soon { transition: none; } }
-  #video { position: relative; }
-  #video::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 1px; background: #f0a35e; }
+  #video, .abstract, .why, .method, .experiments, .citation { position: relative; }
+  #video::before, .abstract::before, .why::before, .method::before, .experiments::before, .citation::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 1px; background: #f0a35e; }
   #video { scroll-margin-top: 24px; padding-top: 40px; }
   #video h2 { text-align: center; margin: 0 0 28px; font-size: 26px; letter-spacing: -.3px; }
   video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #000; }
+  .abstract { margin: 48px auto 0; padding-top: 40px; }
+  .abstract h2 { text-align: center; margin: 0 0 22px; font-size: 26px; font-weight: 700; letter-spacing: -.3px; }
+  .abstract p { max-width: 760px; margin: 0 auto 18px; color: #b7c0c8; font-size: 18px; line-height: 1.8; text-align: justify; hyphens: auto; }
+  .why { margin: 48px auto 0; padding-top: 40px; }
+  .why h2 { text-align: center; margin: 0 0 28px; font-size: 26px; letter-spacing: -.3px; }
+  .related-work-media { aspect-ratio: 16 / 9; background: #000; }
+  .related-work-media video { pointer-events: none; }
+  .comparison-carousel { display: grid; grid-template-columns: 44px minmax(0, 800px) 44px; gap: 24px; align-items: center; justify-content: center; margin: 32px auto 0; }
+  .comparisons { display: grid; }
+  .comparison-card { grid-area: 1 / 1; }
+  .comparison-card[hidden] { display: block; visibility: hidden; pointer-events: none; }
+  .comparison-arrow { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid #343c43; border-radius: 50%; background: #1b2025; color: #e5ebef; cursor: pointer; }
+  .comparison-arrow:hover:not(:disabled) { border-color: #f0a35e; color: #f0a35e; }
+  .comparison-arrow:disabled { opacity: .25; cursor: default; }
+  .comparison-arrow svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .comparison-number { flex-shrink: 0; color: #f0a35e; }
+  .comparisons h3 { display: flex; align-items: baseline; justify-content: center; gap: 12px; text-align: center; }
+  .comparison-carousel:focus-visible { outline: 2px solid #f0a35e; outline-offset: 5px; }
+  .comparisons h3 { margin: 0 0 8px; color: #f4f7fb; font-size: 20px; line-height: 1.4; }
+  .comparisons p { margin: 0; color: #b7c0c8; font-size: 18px; line-height: 1.8; }
+  .comparison-citations { max-width: 800px; margin: 24px auto 0; color: #8d969e; font-size: 12px; line-height: 1.6; text-align: center; }
+  .comparison-citations small { font-size: inherit; }
+  .method { margin-top: 48px; padding-top: 40px; }
+  .method h2 { text-align: center; margin: 0 0 28px; font-size: 26px; letter-spacing: -.3px; }
+  .method-carousel { display: grid; grid-template-columns: 44px minmax(0, 800px) 44px; gap: 0 24px; align-items: center; justify-content: center; }
+  #method-slides { display: contents; }
+  .method-card { display: grid; grid-column: 2; grid-row: 1 / 3; grid-template-rows: subgrid; margin: 0; }
+  .method-card video { grid-row: 1; }
+  .method-arrow { grid-row: 1; align-self: center; }
+  .method-arrow.previous { grid-column: 1; }
+  .method-arrow.next { grid-column: 3; }
+  .method-card[hidden] { display: grid; visibility: hidden; pointer-events: none; }
+  .method-explanation { grid-row: 2; margin: 24px 0 0; }
+  .method-explanation p { margin: 0; color: #b7c0c8; font-size: 18px; line-height: 1.8; }
+  .method-inline-title { color: #f4f7fb; }
+  .method-explanation .method-number { margin-right: 8px; white-space: nowrap; }
+  .method-number { flex-shrink: 0; color: #f0a35e; font-size: inherit; letter-spacing: normal; }
+  .method-arrow { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid #343c43; border-radius: 50%; background: #1b2025; color: #e5ebef; cursor: pointer; margin-top: 0; }
+  .method-arrow:hover:not(:disabled) { border-color: #f0a35e; color: #f0a35e; }
+  .method-arrow:disabled { opacity: .25; cursor: default; }
+  .method-arrow svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .fac-cp { color: #f0a35e; font-family: 'Lato', sans-serif; font-weight: 700; font-style: normal; letter-spacing: -.035em; white-space: nowrap; }
+  .experiments { margin-top: 48px; padding-top: 40px; }
+  .experiments h2 { margin: 0 0 36px; font-size: 26px; letter-spacing: -.3px; text-align: center; }
+  .experiment + .experiment { margin-top: 56px; }
+  .experiment h3 { margin: 0 0 24px; color: #f0a35e; font-size: 20px; line-height: 1.4; text-align: center; }
+  .experiment-plots { display: grid; gap: 18px; }
+  .experiment-plot { margin: 0; }
+  .experiment-plot img { display: block; width: 100%; height: auto; background: #fff; }
+  .experiment-video { height: auto; aspect-ratio: auto; pointer-events: none; }
+  .experiment-explanation { max-width: 800px; margin: 24px auto 0; }
+  .experiment-explanation p { margin: 0 0 16px; color: #b7c0c8; font-size: 18px; line-height: 1.8; }
+  .citation { margin-top: 48px; padding-top: 40px; }
+  .citation h2 { text-align: center; margin: 0 0 28px; font-size: 26px; letter-spacing: -.3px; }
+  .citation-block { position: relative; border: 1px solid #2b3035; border-radius: 6px; padding: 20px; }
+  .citation pre { width: 100%; min-height: 1.6em; margin: 0; overflow-x: auto; color: #b7c0c8; font: 14px/1.6 ui-monospace, monospace; }
+  .citation-block .copy-citation { position: absolute; right: 12px; bottom: 12px; }
+  .copy-citation { border: 1px solid #343c43; border-radius: 4px; padding: 6px 12px; background: #1b2025; color: #e5ebef; font: inherit; font-size: 13px; cursor: pointer; }
+  .copy-citation:hover, .copy-citation:focus-visible { border-color: #f0a35e; color: #f0a35e; }
   * { box-sizing: border-box; }
   @media (max-width: 600px) {
     main { width: calc(100% - 36px); padding: 52px 0 36px; }
@@ -99,5 +437,24 @@ import FactorizedConformalLogo from '../../../components/FactorizedConformalLogo
     nav { gap: 8px; margin: 25px 0 34px; }
     nav :is(button, a) { width: 94px; flex-basis: 94px; }
     #video { padding-top: 28px; }
+    .abstract { margin-top: 32px; padding-top: 28px; }
+    .abstract p, .comparisons p { font-size: 16px; line-height: 1.75; }
+    .why { margin-top: 32px; padding-top: 28px; }
+    .comparison-carousel { grid-template-columns: 32px minmax(0, 1fr) 32px; gap: 8px; margin-top: 24px; }
+    .comparison-arrow { width: 32px; height: 32px; }
+    .comparisons h3 { gap: 8px; }
+    .comparisons h3 { font-size: 18px; }
+    .method { margin-top: 32px; padding-top: 28px; }
+    .method-carousel { grid-template-columns: 32px minmax(0, 1fr) 32px; gap: 0 8px; }
+    .method-arrow { width: 32px; height: 32px; }
+    .method-explanation { margin-top: 18px; }
+    .method-explanation p { font-size: 16px; line-height: 1.75; }
+    .citation { margin-top: 32px; padding-top: 28px; }
+    .experiments { margin-top: 32px; padding-top: 28px; }
+    .experiments h2 { margin-bottom: 28px; }
+    .experiment + .experiment { margin-top: 40px; }
+    .experiment h3 { margin-bottom: 18px; font-size: 18px; }
+    .experiment-explanation { margin-top: 18px; }
+    .experiment-explanation p { font-size: 16px; line-height: 1.75; }
   }
 </style>
