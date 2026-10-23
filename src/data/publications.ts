@@ -20,7 +20,7 @@ export const publications: Publication[] = [
     slug: 'micrompc',
     year: 2027,
     paperUrl: '#', // Replace with the arXiv URL.
-    videoUrl: '#', // Replace with the YouTube URL.
+    videoUrl: '/projects/micrompc/#video',
     media: { src: '/projects/micrompc/assets/thumbnail.mp4', type: 'video' },
     title: 'μMPC: Safe Nonlinear and World Model Control in Microseconds via Koopman-Linearized Pre-Compilation',
     venue: 'In Submission',
@@ -69,7 +69,7 @@ export const publications: Publication[] = [
   {
     slug: 'generative-planner-safety',
     year: 2026,
-    paperUrl: '#', // Replace with the arXiv URL.
+    paperUrl: 'https://ieeexplore.ieee.org/iel8/11695711/11695694/11696753.pdf',
     videoUrl: '#', // Replace with the YouTube URL.
     media: { src: '/projects/generative-planner-safety/assets/thumbnail.mp4', type: 'video' },
     title: 'Formal Safety Verification and Refinement for Generative Motion Planners via Certified Local Stabilization',

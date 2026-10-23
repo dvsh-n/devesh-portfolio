@@ -86,7 +86,8 @@ const structuredData = {
       <main>
         <section class="panel accent-orange" id="about" aria-labelledby="about-title">
           <h2 id="about-title">01 / About</h2>
-          <p>I’m Devesh, a third-year Robotics PhD student at <a target="_blank" rel="noopener noreferrer" href="https://www.gatech.edu/">Georgia Tech</a> in the Trustworthy Robotics Lab, advised by <a target="_blank" rel="noopener noreferrer" href="https://glenchou.github.io/">Dr. Glen Chou</a>. I develop methods for capable, provably safe robotic planning and control using control theory, statistics, and learned representations. Scaling data, compute, and tuning mostly pushes us toward a local optimum; the real leap is learning representations that principled methods can exploit. I work on world models, Koopman operators, conformal prediction, and robust control to make real-time planning scale with meaningful safety guarantees.</p>
+          <p>I’m Devesh, a third-year Robotics PhD student at <a target="_blank" rel="noopener noreferrer" href="https://www.gatech.edu/">Georgia Tech</a> in the Trustworthy Robotics Lab, advised by <a target="_blank" rel="noopener noreferrer" href="https://glenchou.github.io/">Dr. Glen Chou</a>. I develop methods for capable, provably safe robotic planning and control using control theory, statistics, and learned representations.</p>
+          <p>Progress comes from combining data and compute with theoretically motivated methods. I focus on learning representations that make this combination more powerful, efficient, and reliable. I work on world models, Koopman operators, conformal prediction, and robust control to make real-time planning scale with meaningful safety guarantees.</p>
         </section>
 
         <section class="panel accent-green" id="education" aria-labelledby="education-title">
@@ -145,30 +146,78 @@ const structuredData = {
       const gifs: { src: string; duration: number }[] = JSON.parse(portrait.dataset.gifs ?? '[]');
       let playing = false;
       let lastGif = '';
-      const openSurprise = (event: Event) => {
+      let bag: typeof gifs = [];
+      const downloads = new Map<string, Promise<Blob | null>>();
+      const download = (src: string) => {
+        let pending = downloads.get(src);
+        if (!pending) {
+          pending = fetch(src)
+            .then((response) => {
+              if (!response.ok) throw new Error('Animation unavailable');
+              return response.blob();
+            })
+            .catch(() => {
+              downloads.delete(src);
+              return null;
+            });
+          downloads.set(src, pending);
+        }
+        return pending;
+      };
+      const prepareNext = () => {
+        if (!bag.length) {
+          bag = [...gifs];
+          for (let i = bag.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [bag[i], bag[j]] = [bag[j], bag[i]];
+          }
+          // Avoid repeating the last animation when a new round starts.
+          if (bag.length > 1 && bag[0].src === lastGif) {
+            const j = 1 + Math.floor(Math.random() * (bag.length - 1));
+            [bag[0], bag[j]] = [bag[j], bag[0]];
+          }
+        }
+        if (bag[0]) void download(bag[0].src);
+      };
+      const openSurprise = async (event: Event) => {
         event.preventDefault();
-        if (playing) return;
-        const choices = gifs.filter((gif) => gif.src !== lastGif);
-        if (!choices.length) return;
-        const selected = choices[Math.floor(Math.random() * choices.length)];
-        lastGif = selected.src;
+        if (playing || !gifs.length) return;
         playing = true;
-        const animation = new Image();
+        prepareNext();
+        const selected = bag.shift()!;
+        lastGif = selected.src;
+        const pending = download(selected.src);
+        prepareNext();
+        const blob = await pending;
+        if (!blob) {
+          playing = false;
+          return;
+        }
+        // A fresh local URL restarts the GIF without another network request.
+        const playbackUrl = URL.createObjectURL(blob);
+        // Keep Astro's scoped styling attributes so every GIF uses contain sizing.
+        const animation = originalPortrait.cloneNode(true) as HTMLImageElement;
         animation.onload = () => {
-          portraitImage.src = animation.src;
-          portraitImage.alt = 'Surprise animation';
+          animation.alt = 'Surprise animation';
+          portraitImage.replaceWith(animation);
+          portraitImage = animation;
           portrait.classList.add('playing-gif');
           window.setTimeout(() => {
             const restoredPortrait = originalPortrait.cloneNode(true) as HTMLImageElement;
             portraitImage.replaceWith(restoredPortrait);
             portraitImage = restoredPortrait;
             portrait.classList.remove('playing-gif');
+            URL.revokeObjectURL(playbackUrl);
             playing = false;
           }, Math.max(2500, selected.duration));
         };
-        animation.onerror = () => { playing = false; };
-        animation.src = `${selected.src}?play=${Date.now()}`;
+        animation.onerror = () => {
+          URL.revokeObjectURL(playbackUrl);
+          playing = false;
+        };
+        animation.src = playbackUrl;
       };
+      prepareNext();
       portrait.addEventListener('click', openSurprise);
       portrait.addEventListener('contextmenu', openSurprise);
       // Placeholder links remain on the current publication until real URLs are added.
@@ -351,6 +400,7 @@ const structuredData = {
   .accent-green { --accent: var(--green); }
   .accent-teal { --accent: var(--teal); }
   h2 { color: var(--accent); font-size: 16px; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase; line-height: 1.35; margin-bottom: 16px; }
+  #about p + p { margin-top: 16px; }
   .education-entry h3 { font-size: 15px; line-height: 1.7; font-weight: 700; }
   .education-entry + .education-entry { margin-top: 22px; padding-top: 22px; border-top: 1px dashed var(--line); }
   .degree { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 5px 12px; padding: 10px 0 6px; font-size: 13px; }

@@ -42,10 +42,14 @@ const subtitle = 'Safe Nonlinear and World Model Control in Microseconds via Koo
             { label: 'Code', path: 'm8 7-5 5 5 5 M16 7l5 5-5 5 M14 4l-4 16' },
             { label: 'Video', path: 'm8 5 11 7-11 7V5Z' },
           ].map(({ label, path }) => (
+            label === 'Video' ? (
+              <a href="#video" aria-label="Watch the summary video"><span class="resource-label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d={path} /></svg><span>{label}</span></span></a>
+            ) : (
             <button type="button" aria-disabled="true" aria-label={`${label}: Coming Soon!`}>
               <span class="resource-label" aria-hidden="true"><svg viewBox="0 0 24 24"><path d={path} /></svg><span>{label}</span></span>
               <span class="soon" aria-hidden="true">Coming Soon!</span>
             </button>
+            )
           ))}
         </nav>
       </header>
@@ -238,19 +242,21 @@ const subtitle = 'Safe Nonlinear and World Model Control in Microseconds via Koo
   .authors a:hover { color: #50d6ff; }
   .authors > span[aria-hidden] { color: #55616c; }
   nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin: 29px 0 48px; }
-  nav button { position: relative; isolation: isolate; overflow: hidden; display: inline-grid; place-items: center; width: 112px; height: 42px; padding: 0; flex: 0 0 112px; border: 1px solid #343c43; border-radius: 24px; background: #1b2025; color: #e5ebef; font: 700 14px/1.4 'Lato', sans-serif; cursor: default; transition: border-color .3s; }
-  nav button::before { content: ''; position: absolute; inset: 0; z-index: -1; background: rgb(80 214 255 / 12%); transform: translateY(101%); transition: transform .3s cubic-bezier(.22, 1, .36, 1); }
-  nav button > span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: opacity .2s, transform .3s; }
-  nav button .resource-label { display: grid; grid-template-columns: 16px 38px; align-content: center; justify-content: center; align-items: center; gap: 8px; line-height: 16px; }
+  nav :is(button, a) { position: relative; isolation: isolate; overflow: hidden; display: inline-grid; place-items: center; width: 112px; height: 42px; padding: 0; flex: 0 0 112px; border: 1px solid #343c43; border-radius: 24px; background: #1b2025; color: #e5ebef; font: 700 14px/1.4 'Lato', sans-serif; cursor: default; transition: border-color .3s; }
+  nav :is(button, a)::before { content: ''; position: absolute; inset: 0; z-index: -1; background: rgb(80 214 255 / 12%); transform: translateY(101%); transition: transform .3s cubic-bezier(.22, 1, .36, 1); }
+  nav :is(button, a) > span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: opacity .2s, transform .3s; }
+  nav :is(button, a) .resource-label { display: grid; grid-template-columns: 16px 38px; align-content: center; justify-content: center; align-items: center; gap: 8px; line-height: 16px; }
   .resource-label > span { display: block; text-align: left; }
-  nav button .soon { opacity: 0; transform: translateY(8px); color: #50d6ff; font-size: 11px; letter-spacing: .3px; white-space: nowrap; }
-  nav button:is(:hover, :focus-visible, .show-soon) { border-color: #50d6ff; }
-  nav button:is(:hover, :focus-visible, .show-soon)::before { transform: translateY(0); }
-  nav button:is(:hover, :focus-visible, .show-soon) .resource-label { opacity: 0; transform: translateY(-8px); }
-  nav button:is(:hover, :focus-visible, .show-soon) .soon { opacity: 1; transform: translateY(0); }
+  nav :is(button, a) .soon { opacity: 0; transform: translateY(8px); color: #50d6ff; font-size: 11px; letter-spacing: .3px; white-space: nowrap; }
+  nav :is(button, a):is(:hover, :focus-visible, .show-soon) { border-color: #50d6ff; }
+  nav :is(button, a):is(:hover, :focus-visible, .show-soon)::before { transform: translateY(0); }
+  nav :is(button, a):is(:hover, :focus-visible, .show-soon) .resource-label { opacity: 0; transform: translateY(-8px); }
+  nav :is(button, a):is(:hover, :focus-visible, .show-soon) .soon { opacity: 1; transform: translateY(0); }
+  nav a { cursor: pointer; text-decoration: none; }
+  nav a:is(:hover, :focus-visible) .resource-label { opacity: 1; transform: none; }
   :is(a, button):focus-visible { outline: 2px solid #50d6ff; outline-offset: 5px; }
   nav svg { display: block; width: 16px; height: 16px; flex: 0 0 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-  @media (prefers-reduced-motion: reduce) { nav button, nav button::before, .resource-label, .soon { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { nav :is(button, a), nav :is(button, a)::before, .resource-label, .soon { transition: none; } }
   #video, .abstract, .method, .results, .citation { position: relative; }
   #video::before, .abstract::before, .method::before, .results::before, .citation::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 1px; background: #50d6ff; }
   #video { scroll-margin-top: 24px; padding-top: 40px; }
@@ -296,7 +302,7 @@ const subtitle = 'Safe Nonlinear and World Model Control in Microseconds via Koo
     .subtitle { font-size: 25px; letter-spacing: -.35px; line-height: 1.4; }
     .authors { margin-top: 23px; font-size: 16px; gap: 12px; }
     nav { gap: 8px; margin: 25px 0 34px; }
-    nav button { width: 94px; flex-basis: 94px; }
+    nav :is(button, a) { width: 94px; flex-basis: 94px; }
     #video { padding-top: 28px; }
     .abstract { margin-top: 32px; padding-top: 28px; }
     .abstract p { font-size: 16px; line-height: 1.75; }
