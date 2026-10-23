@@ -1,4 +1,4 @@
-const facCpThumbnailUrl = '/projects/adaptive-conformal-prediction/assets/thumbnail.mp4?v=f1e7ccc7dd34';
+const facCpThumbnailUrl = '/projects/faccp/assets/thumbnail.mp4?v=f1e7ccc7dd34';
 
 export interface Publication {
   slug: string;
@@ -55,10 +55,10 @@ export const publications: Publication[] = [
     topics: ['Scalable Nonlinear Reachability', 'Conformal Safety Guarantees', 'Learned Koopman Linearization', 'Black Box Dynamics'],
   },
   {
-    slug: 'adaptive-conformal-prediction',
+    slug: 'faccp',
     year: 2027,
     paperUrl: '#', // Replace with the arXiv URL.
-    videoUrl: '/projects/adaptive-conformal-prediction/#video',
+    videoUrl: '/projects/faccp/#video',
     media: { src: facCpThumbnailUrl, type: 'video' },
     title: 'Factorized Conformal Prediction Via Learned Residual-Law Retrieval',
     venue: 'In Submission',

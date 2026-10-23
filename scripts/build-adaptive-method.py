@@ -3,7 +3,7 @@ from pathlib import Path
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / 'src/pages/projects/adaptive-conformal-prediction/FacCp.mp4'
+SOURCE = ROOT / 'src/pages/projects/faccp/FacCp.mp4'
 OUTPUT = SOURCE.parent / 'method_videos'
 # Seconds from representation.py's play/wait durations at TIME_SCALE = 1.
 # Stop card 1 before its .6s fade. Card 3 ends after the retrieval-ring hold.

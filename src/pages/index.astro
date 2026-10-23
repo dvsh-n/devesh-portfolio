@@ -123,7 +123,7 @@ const structuredData = {
                   )}
                 </div>
                 <div class="paper-content">
-                  <h4 id={`${paper.slug}-title`}>{paper.slug === 'micrompc' ? <><MuMpcLogo />{paper.title.replace(/^μMPC/, '')}</> : paper.slug === 'adaptive-conformal-prediction' ? <><span class="faccp-name">FacCP</span>: <FactorizedConformalLogo />{paper.title.replace(/^Factorized Conformal Prediction/, '')}</> : paper.title}</h4>
+                  <h4 id={`${paper.slug}-title`}>{paper.slug === 'micrompc' ? <><MuMpcLogo />{paper.title.replace(/^μMPC/, '')}</> : paper.slug === 'faccp' ? <><span class="faccp-name">FacCP</span>: <FactorizedConformalLogo />{paper.title.replace(/^Factorized Conformal Prediction/, '')}</> : paper.title}</h4>
                   <p class="authors">{paper.authors.split('Devesh Nath').map((part, index) => <>{index > 0 && <strong>Devesh Nath</strong>}{part}</>)}</p>
                   <p class="venue">{paper.venue}{paper.distinction && <> · <span class="distinction">{paper.distinction}</span></>}</p>
                   <div class="paper-buttons">

@@ -20,8 +20,8 @@ Background treatment (baked into the generated video):
 - No audio; H.264/yuv420p with faststart for browser playback.
 
 FacCP:
-Source: src/pages/projects/adaptive-conformal-prediction/FacCp.mp4
-Thumbnail: public/projects/adaptive-conformal-prediction/assets/thumbnail.mp4
+Source: src/pages/projects/faccp/FacCp.mp4
+Thumbnail: public/projects/faccp/assets/thumbnail.mp4
 Segment: 00:16–01:22 (Reachable-Set Prediction through Local Guarantees).
 Rebuild: python3 scripts/build-adaptive-thumbnail.py
 Final frame: 3840 x 2400; the 16:9 foreground fills 3840 x 2160,

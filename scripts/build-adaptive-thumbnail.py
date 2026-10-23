@@ -5,8 +5,8 @@ import re
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / 'src/pages/projects/adaptive-conformal-prediction/FacCp.mp4'
-OUTPUT = ROOT / 'public/projects/adaptive-conformal-prediction/assets/thumbnail.mp4'
+SOURCE = ROOT / 'src/pages/projects/faccp/FacCp.mp4'
+OUTPUT = ROOT / 'public/projects/faccp/assets/thumbnail.mp4'
 
 # Reachable-set prediction through Local Guarantees; exclude the experiments.
 START_SECONDS = 16
@@ -33,7 +33,7 @@ publications = ROOT / 'src/data/publications.ts'
 data = publications.read_text()
 data, count = re.subn(
     r"const facCpThumbnailUrl = '[^']*';",
-    f"const facCpThumbnailUrl = '/projects/adaptive-conformal-prediction/assets/thumbnail.mp4?v={digest}';",
+    f"const facCpThumbnailUrl = '/projects/faccp/assets/thumbnail.mp4?v={digest}';",
     data,
 )
 if count != 1:

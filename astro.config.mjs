@@ -5,4 +5,7 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   site: 'https://www.deveshnath.com',
   devToolbar: { enabled: false },
+  redirects: {
+    '/projects/adaptive-conformal-prediction/': '/projects/faccp/',
+  },
 });

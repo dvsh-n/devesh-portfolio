@@ -53,4 +53,4 @@ Run `python3 scripts/build-generative-thumbnail.py` to rebuild the publication l
 
 ## Adaptive Conformal Prediction thumbnail
 
-Run `python3 scripts/build-adaptive-thumbnail.py` to frame `src/pages/projects/adaptive-conformal-prediction/FacCp.mp4` as the publication thumbnail. The full animation retains its native 3840 × 2160 foreground and 60 fps in the shared 8:5 frame with blurred fill.
+Run `python3 scripts/build-adaptive-thumbnail.py` to frame `src/pages/projects/faccp/FacCp.mp4` as the publication thumbnail. The full animation retains its native 3840 × 2160 foreground and 60 fps in the shared 8:5 frame with blurred fill.

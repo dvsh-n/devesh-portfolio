@@ -3,7 +3,7 @@ from pathlib import Path
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / 'src/pages/projects/adaptive-conformal-prediction/FacCp.mp4'
+SOURCE = ROOT / 'src/pages/projects/faccp/FacCp.mp4'
 OUTPUT = SOURCE.parent / 'experiment_videos'
 # Manim's quad2d_animation.py, quad3d_animation.py, and driving_animation.py
 # define the panels. Frame boundaries come from the production render's partial
