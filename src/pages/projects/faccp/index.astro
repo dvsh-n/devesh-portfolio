@@ -165,7 +165,8 @@ const experiments = [
                   <source src={step.url} type="video/mp4" />
                 </video>
                 <figcaption class="method-explanation">
-                  <p><span class="method-number">{index + 1} / {methodSteps.length}</span> <strong class="method-inline-title">{step.title}.</strong> {step.explanation.split('FacCP').map((part, partIndex) => <>{partIndex > 0 && <span class="fac-cp">FacCP</span>}{part}</>)}</p>
+                  <h3><span class="method-number">{index + 1} / {methodSteps.length}</span><span>{step.title}</span></h3>
+                  <p>{step.explanation.split('FacCP').map((part, partIndex) => <>{partIndex > 0 && <span class="fac-cp">FacCP</span>}{part}</>)}</p>
                 </figcaption>
               </figure>
             ))}
@@ -404,8 +405,8 @@ const experiments = [
   .method-card[hidden] { display: grid; visibility: hidden; pointer-events: none; }
   .method-explanation { grid-row: 2; margin: 24px 0 0; }
   .method-explanation p { margin: 0; color: #b7c0c8; font-size: 18px; line-height: 1.8; }
-  .method-inline-title { color: #f4f7fb; }
-  .method-explanation .method-number { margin-right: 8px; white-space: nowrap; }
+  .method-explanation h3 { display: flex; align-items: baseline; justify-content: center; gap: 12px; margin: 0 0 8px; color: #f4f7fb; font-size: 20px; line-height: 1.4; text-align: center; }
+  .method-explanation .method-number { font-weight: 400; white-space: nowrap; }
   .method-number { flex-shrink: 0; color: #f0a35e; font-size: inherit; letter-spacing: normal; }
   .method-arrow { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid #343c43; border-radius: 50%; background: #1b2025; color: #e5ebef; cursor: pointer; margin-top: 0; }
   .method-arrow:hover:not(:disabled) { border-color: #f0a35e; color: #f0a35e; }
@@ -448,6 +449,7 @@ const experiments = [
     .method-carousel { grid-template-columns: 32px minmax(0, 1fr) 32px; gap: 0 8px; }
     .method-arrow { width: 32px; height: 32px; }
     .method-explanation { margin-top: 18px; }
+    .method-explanation h3 { font-size: 18px; gap: 8px; }
     .method-explanation p { font-size: 16px; line-height: 1.75; }
     .citation { margin-top: 32px; padding-top: 28px; }
     .experiments { margin-top: 32px; padding-top: 28px; }
