@@ -8,12 +8,9 @@ import method3Url from './method_videos/04-local-residual-weights.mp4?url';
 import method4Url from './method_videos/05-local-geometry-retrieval.mp4?url';
 import method5Url from './method_videos/06-conformalized-local-geometry.mp4?url';
 import method6Url from './method_videos/07-local-guarantees.mp4?url';
-import geometryExperimentUrl from './experiment_videos/01-multiple-geometries.mp4?url';
-import capacityExperimentUrl from './experiment_videos/02-data-and-capacity.mp4?url';
-import reachabilityExperimentUrl from './experiment_videos/03-3d-reachability.mp4?url';
-import geometryPosterUrl from './experiment_videos/01-multiple-geometries.jpg?url';
-import capacityPosterUrl from './experiment_videos/02-data-and-capacity.jpg?url';
-import reachabilityPosterUrl from './experiment_videos/03-3d-reachability.jpg?url';
+import geometryPlotUrl from './experiment_plots/geometry_comparison_dark_A-D.svg?url';
+import sweepPlotUrl from './experiment_plots/sweep_comparison_dark_A-D.svg?url';
+import reachabilityPlotUrl from './experiment_plots/3dquad_dark.svg?url';
 import intersectionPlotUrl from './experiment_plots/multimodal-intersection-and-turn.svg?url';
 import neighborsPlotUrl from './experiment_plots/multimodal-neighbors.svg?url';
 import singleModePlotUrl from './experiment_plots/single-mode.svg?url';
@@ -30,26 +27,26 @@ const methodSteps = [
 const experiments = [
   {
     title: "One Representation, Four Set Geometries",
-    url: geometryExperimentUrl, poster: geometryPosterUrl, width: 2560, height: 990,
+    plots: [{ url: geometryPlotUrl, dark: true, width: 1357.6904, height: 245.74662, label: 'FacCP and global prediction sets for ellipsoid, hyperbox, KDE, and zonotope geometries' }],
     paragraphs: [
-      "One learned representation supports ellipsoids, hyperboxes, zonotopes, and density-based sets without retraining. On planar quadcopter rollouts, FacCP adapts each geometry to the query and produces tighter sets across all four families. Each family is calibrated separately to target 99% simultaneous coverage of the full 100-step trajectory.",
-      "The benefit comes from learning which errors are relevant. With 806 input dimensions, raw-input retrieval gives nearly the same ellipsoid log volume as global geometry (−26.66 versus −25.82). Learned retrieval reaches −33.25 with 99.1% measured coverage, showing how a suitable representation can make local adaptation more effective.",
+      "One learned representation supports ellipsoids, hyperboxes, zonotopes, and density-based sets without retraining. FacCP produces tighter sets across all four families on 100-step planar quadcopter trajectories. Each family is calibrated separately for 99% whole-trajectory coverage.",
+      "With 806 input dimensions, raw-input retrieval barely improves on global geometry. Learned retrieval reduces ellipsoid log volume from −25.82 to −33.25 with 99.1% measured coverage. Energy-score training also outperforms input-reconstruction and residual-prediction encoders.",
     ],
   },
   {
     title: "Tighter Sets with Less Data and Capacity",
-    url: capacityExperimentUrl, poster: capacityPosterUrl, width: 2560, height: 990,
+    plots: [{ url: sweepPlotUrl, dark: true, width: 1357.6904, height: 301.74662, label: 'FacCP compared with covariance prediction and resCONTRA under limited training data and model capacity' }],
     paragraphs: [
-      "FacCP shows its largest gains when training data or model capacity is limited. At roughly 5,000 learned parameters, it produces sets over 1,000× smaller than resCONTRA at comparable coverage; the low-capacity comparison with covariance prediction gives over 250× smaller sets. The capacity sweeps match learned parameter counts and use the same trajectory-level calibration procedure.",
-      "With 20% of the training data, sets are 211× smaller than resCONTRA and 46× smaller than covariance prediction while maintaining coverage. Retrieving observed residuals lets the model focus on learning which examples to use. The advantage narrows as direct models receive more data and capacity.",
+      "FacCP learns which residuals to retrieve instead of directly predicting geometry parameters. At roughly 5,000 learned parameters, its sets are over 1,000× smaller than resCONTRA at comparable coverage. At low capacity, they are over 250× smaller than covariance prediction.",
+      "With 20% of the training data, sets are 211× smaller than resCONTRA and 46× smaller than covariance prediction while maintaining coverage. These gains narrow as direct models receive more data and capacity.",
     ],
   },
   {
     title: "High-Dimensional Robotic Reachability",
-    url: reachabilityExperimentUrl, poster: reachabilityPosterUrl, width: 2560, height: 990,
+    plots: [{ url: reachabilityPlotUrl, dark: true, width: 1187.7947, height: 423.06834, label: '3D quadcopter state trajectories with FacCP local and global reachable sets across twelve coordinates' }],
     paragraphs: [
-      "The same construction extends to 200-step 3D quadcopter rollouts: 3,212 input coordinates and a 2,400-dimensional residual trajectory. FacCP reduces mean per-step 12D log volume from −52.52 to −68.99, with measured whole-trajectory coverage of 99.3%, versus 99.4% for global geometry. The animation shows coordinate projections of these reachable sets.",
-      "Calibration targets the complete trajectory, rather than individual coordinates or time steps. Retrieval remains particularly effective under limited data and capacity, but the comparison also shows its scope: with enough training data and model capacity, resCONTRA closes the gap and can produce tighter sets.",
+      "On 200-step 3D quadcopter rollouts, each query has 3,212 input coordinates and a 2,400-dimensional residual trajectory. FacCP reduces mean per-step 12D log volume from −52.52 to −68.99, with measured whole-trajectory coverage of 99.3% versus 99.4% for global geometry.",
+      "One threshold calibrates the complete trajectory. Retrieval gives tighter sets with limited data and capacity. With enough of both, resCONTRA can produce tighter sets.",
     ],
   },
   {
@@ -59,8 +56,8 @@ const experiments = [
       { url: neighborsPlotUrl, width: 1633.21, height: 286.571, label: 'Multimodal prediction with neighboring agents' },
     ],
     paragraphs: [
-      "FacCP adapts uncertainty around six fixed candidate paths from an MTR forecaster, covering a six-second driving horizon. At the 95% target, it reduces mean footprint by 14.9% relative to global SNSA, from 683.8 to 581.9 m²·s. Measured whole-path coverage is 94.46% versus 95.19%, so the smaller footprint comes with a modest empirical coverage difference.",
-      "Coverage here requires one candidate tube to contain the entire observed future, without switching candidates along the way. FORCE-OPT produces smaller footprints but reaches 62.29% on this whole-path metric; its calibration targets individual time steps. The plots illustrate why compactness and the coverage event need to be considered together.",
+      "FacCP builds tubes around six fixed MTR paths over six seconds. Retrieved errors let each tube adapt its orientation and width to the scene. At the 95% target, mean footprint falls 13.7%, from 679.6 to 586.4 m²·s. Measured whole-path coverage is 94.92% versus 95.21% for global SNSA.",
+      "Coverage requires one tube to contain the entire observed path without switching candidates. FORCE-OPT gives smaller footprints but covers only 62.29% of whole paths. Its calibration targets individual time steps.",
     ],
   },
   {
@@ -69,8 +66,8 @@ const experiments = [
       { url: singleModePlotUrl, width: 1633.21, height: 286.571, label: 'Single-mode prediction compared with global SNSA, NLE, and MVCS' },
     ],
     paragraphs: [
-      "Tighter tubes also appear when only the highest-probability forecast is retained. At the 97% target, FacCP reduces mean footprint from 3,356.1 to 2,310.1 m²·s—about 31%—with measured whole-path coverage of 97.53%, versus 97.63% for global SNSA. In the illustrated scene, both cover the observed trajectory, while the local tube uses 76.7% less footprint.",
-      "This comparison measures spatial occupancy over time. NLE and MVCS are shown as projections of joint trajectory ellipsoids: a wide projection can still belong to a compact joint set because it captures dependencies across time. The footprint comparison therefore describes spatial tightness, rather than a ranking of joint trajectory volumes.",
+      "Using only the highest-probability forecast, FacCP reduces mean footprint by 26.3%, from 3,356.1 to 2,472.7 m²·s at the 97% target. Measured whole-path coverage is 97.57% versus 97.63% for global SNSA.",
+      "Footprint measures spatial area over time. NLE and MVCS show projections of joint trajectory ellipsoids. Their wider projections can still represent compact joint sets that capture dependence across time.",
     ],
   },
 ];
@@ -118,8 +115,8 @@ const experiments = [
       </section>
       <section class="abstract" aria-labelledby="abstract-title">
         <h2 id="abstract-title">Abstract</h2>
-        <p>Local uncertainty. Global calibration. <span class="fac-cp">FacCP</span> builds prediction sets that adapt to query-dependent uncertainty in high dimensions. It learns a representation that brings examples with similar residual distributions together, then retrieves relevant residuals to estimate each query’s uncertainty. This local residual law determines the set’s shape; a single global conformal quantile calibrates its inflation, preserving finite-sample marginal coverage under exchangeability while using the entire calibration sample. The same learned representation supports ellipsoids, hyperboxes, zonotopes, and density-based sets without retraining.</p>
-        <p><span class="fac-cp">FacCP</span> connects the quality of local uncertainty geometry to local coverage: under a geometry-approximation condition, better geometry bounds how much the score distribution varies across queries. Experiments show why local calibration alone cannot repair a misspecified shape. Across high-dimensional robotic reachability and multimodal autonomous driving, <span class="fac-cp">FacCP</span> produces tighter calibrated sets, with particularly strong data and parameter efficiency when training data or model capacity is limited.</p>
+        <p>Local uncertainty. Global calibration. <span class="fac-cp">FacCP</span> connects local prediction-set geometry to score pivotality. Approximating oracle geometries with equal conditional probability mass makes score distributions comparable across queries. Under this condition, one global threshold controls local coverage error and coverage loss under covariate shift that preserves the conditional response law.</p>
+        <p><span class="fac-cp">FacCP</span> learns a representation with the energy score to retrieve relevant residuals. Their distribution determines each query’s geometry, while the full calibration sample determines one inflation threshold. This preserves finite-sample marginal coverage under exchangeability. One representation supports multiple set families without retraining. Experiments show tighter sets in robotic reachability and autonomous driving, with the largest gains under limited data and model capacity.</p>
       </section>
       <section class="why" aria-labelledby="why-title">
         <h2 id="why-title">Why <span class="fac-cp">FacCP</span>?</h2>
@@ -181,19 +178,13 @@ const experiments = [
         {experiments.map((experiment, index) => (
           <article class="experiment" aria-labelledby={`experiment-${index}-title`}>
             <h3 id={`experiment-${index}-title`}><span class="experiment-number">{index + 1} / {experiments.length}</span><span>{experiment.title}</span></h3>
-            {experiment.plots ? (
               <div class="experiment-plots">
                 {experiment.plots.map((plot) => (
-                  <figure class="experiment-plot">
+                  <figure class:list={['experiment-plot', { 'dark-plot': 'dark' in plot && plot.dark }]}>
                     <img src={plot.url} width={plot.width} height={plot.height} alt={plot.label} loading="lazy" decoding="async" />
                   </figure>
                 ))}
               </div>
-            ) : (
-              <video class="experiment-video" muted playsinline preload="metadata" disablepictureinpicture disableremoteplayback tabindex="-1" poster={experiment.poster} width={experiment.width} height={experiment.height} aria-label={experiment.title} aria-describedby={`experiment-${index}-explanation`}>
-                <source src={experiment.url} type="video/mp4" />
-              </video>
-            )}
             <div class="experiment-explanation" id={`experiment-${index}-explanation`}>
               {experiment.paragraphs.map((paragraph) => (
                 <p>{paragraph.split('FacCP').map((part, partIndex) => <>{partIndex > 0 && <span class="fac-cp">FacCP</span>}{part}</>)}</p>
@@ -309,22 +300,6 @@ const experiments = [
         updatePlayback();
       }, { threshold: 0.25 }).observe(methodCarousel);
 
-      document.querySelectorAll<HTMLVideoElement>('.experiment-video').forEach((video) => {
-        let completed = false;
-        const observer = new IntersectionObserver(([entry]) => {
-          if (completed) return;
-          if (entry.isIntersecting) video.play().catch(() => {});
-          else video.pause();
-        }, { threshold: 0.25 });
-        video.loop = false;
-        video.addEventListener('ended', () => {
-          completed = true;
-          video.pause();
-          observer.disconnect();
-        }, { once: true });
-        observer.observe(video);
-      });
-
       document.querySelectorAll<HTMLButtonElement>('nav button').forEach((button) => {
         let resetTimer: ReturnType<typeof setTimeout>;
         button.addEventListener('click', () => {
@@ -421,7 +396,7 @@ const experiments = [
   .experiment-plots { display: grid; gap: 18px; }
   .experiment-plot { margin: 0; }
   .experiment-plot img { display: block; width: 100%; height: auto; background: #fff; }
-  .experiment-video { height: auto; aspect-ratio: auto; pointer-events: none; }
+  .dark-plot img { background: #0a0a0a; }
   .experiment-explanation { max-width: 800px; margin: 24px auto 0; }
   .experiment-explanation p { margin: 0 0 16px; color: #b7c0c8; font-size: 18px; line-height: 1.8; }
   .citation { margin-top: 48px; padding-top: 40px; }
