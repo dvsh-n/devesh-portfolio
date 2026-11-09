@@ -4,7 +4,11 @@ import AsciiBackground from '../components/AsciiBackground.astro';
 import MuMpcLogo from '../components/MuMpcLogo.astro';
 import FactorizedConformalLogo from '../components/FactorizedConformalLogo.astro';
 import { resolve } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { gifDuration } from '../utils/gif-duration';
+const resumeVersion = createHash('sha256').update(readFileSync(resolve(process.cwd(), 'public/Resume.pdf'))).digest('hex').slice(0, 12);
+const resumeUrl = `/Resume.pdf?v=${resumeVersion}`;
 const portraitGifs = Object.entries(import.meta.glob<string>('../../easter_eggs/**/*.{gif,GIF}', { eager: true, query: '?url', import: 'default' })).map(([path, src]) => ({ src, duration: gifDuration(resolve(process.cwd(), 'src/pages', path)) }));
 const seoTitle = 'Devesh Nath | Robotics PhD Student at Georgia Tech';
 const seoDescription = 'Devesh Nath is a Robotics PhD student at Georgia Tech researching safe robot control, learned world models, and scalable planning with statistical safety guarantees.';
@@ -64,7 +68,7 @@ const structuredData = {
           <p>Trustworthy Robotics Lab</p>
           <p><a class="email" href="mailto:dnath7@gatech.edu">dnath7 [AT] gatech.edu</a></p>
           <nav class="social-links" aria-label="Contact and profiles">
-            <a href="/Resume.pdf" target="_blank" rel="noopener noreferrer" aria-label="Open CV" title="Open CV">
+            <a href={resumeUrl} target="_blank" rel="noopener noreferrer" aria-label="Open CV" title="Open CV">
               <span>CV</span>
             </a>
             <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/deveshnath" aria-label="LinkedIn" title="LinkedIn">
